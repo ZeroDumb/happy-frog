@@ -131,6 +131,9 @@ ENTER
 ```
 
 #### Advanced Example with Conditional Logic
+
+- ATTACKMODE in your initial script can be #out or ommited to make the resulting code not auto run on boot
+
 ```txt
 # Advanced Happy Frog Script - Demonstrating exclusive features
 
@@ -161,6 +164,7 @@ RANDOM_DELAY 100 300
 ENDWHILE
 
 # Advanced modifier combo
+ATTACKMODE
 MOD r
 DELAY 500
 STRING notepad
@@ -226,13 +230,15 @@ Grab a Xiao RP2040 or any of the other microcontrollers listed in our device sup
 ### Command Line Interface
 
 The CLI is actually useful (shocking, we know):
+- use -p or --production for run ready code
+- ommit --production results in educational comments and main() requirements to execute
 
 ```bash
 # Parse a Happy Frog Script file (see what the frog is thinking)
 happy-frog parse payloads/hello_world.txt
 
 # Encode to CircuitPython (turn thoughts into reality)
-happy-frog encode payloads/demo_automation.txt -o compiled/output.py
+happy-frog encode payloads/demo_automation.txt -o compiled/output.py --production
 
 # Convert Ducky Script to Happy Frog Script (migration magic)
 happy-frog convert ducky_script.txt
