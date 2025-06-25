@@ -30,6 +30,13 @@ You may not:
 
 > You are responsible for your usage. Like a grown-up. Or at least a well-supervised minor.
 
+## Current known issues and progress
+- some of the device specific encoders need updating to handle attack and production ready builds
+  for imediate use cases, you can skip using -d and just run encode for .py output while I work
+  to fix the others
+- some logic is failing to parse reliably, should be fixed within the next couple releases
+- most tested and reliable device right now is the xiao rp2040
+
 ##  Why Happy Frog Exists
 
 - Because people learn better with humor and hands-on tools  

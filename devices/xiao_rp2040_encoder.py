@@ -10,85 +10,151 @@ class XiaoRP2040Encoder:
         self.device_name = "Seeed Xiao RP2040"
         self.processor = "RP2040"
         self.framework = "CircuitPython"
+        self.production_mode = False
         self.optimizations = {
             'circuitpython': True,
             'adafruit_hid': True,
             'educational': True,
         }
 
+    def set_production_mode(self, enabled: bool):
+        """Set production mode for immediate execution on boot."""
+        self.production_mode = enabled
+
     def generate_header(self, script: HappyFrogScript) -> List[str]:
         lines = []
-        lines.append('"""')
-        lines.append(f"Happy Frog - {self.device_name} Generated Code")
-        lines.append("Educational HID Emulation Script")
-        lines.append("")
-        lines.append(f"Device: {self.device_name}")
-        lines.append(f"Processor: {self.processor}")
-        lines.append(f"Framework: {self.framework}")
-        lines.append("")
-        lines.append("This code was automatically generated from a Happy Frog Script.")
-        lines.append("Optimized for Seeed Xiao RP2040 with CircuitPython.")
-        lines.append("")
-        lines.append("⚠️ IMPORTANT: Use only for educational purposes and authorized testing!")
-        lines.append('"""')
-        lines.append("")
-        lines.append("import time")
-        lines.append("import usb_hid")
-        lines.append("from adafruit_hid.keyboard import Keyboard")
-        lines.append("from adafruit_hid.keyboard_layout_us import KeyboardLayoutUS")
-        lines.append("from adafruit_hid.keycode import Keycode")
-        lines.append("")
-        lines.append("keyboard = Keyboard(usb_hid.devices)")
-        lines.append("keyboard_layout = KeyboardLayoutUS(keyboard)")
-        lines.append("")
-        lines.append("def main():")
-        lines.append("    # Wait for system to recognize the device")
-        lines.append("    time.sleep(2)")
+        
+        if self.production_mode:
+            lines.append('"""')
+            lines.append(f"Happy Frog - {self.device_name} Production Code")
+            lines.append("HID Emulation Script - Runs immediately on boot")
+            lines.append("")
+            lines.append(f"Device: {self.device_name}")
+            lines.append(f"Processor: {self.processor}")
+            lines.append(f"Framework: {self.framework}")
+            lines.append("Mode: Production (immediate execution)")
+            lines.append("")
+            lines.append("⚠️ PRODUCTION MODE: This code runs immediately when device boots!")
+            lines.append("⚠️ Use only for authorized testing and educational purposes!")
+            lines.append('"""')
+            lines.append("")
+            lines.append("import time")
+            lines.append("import board")
+            lines.append("import usb_hid")
+            lines.append("from adafruit_hid.keyboard import Keyboard")
+            lines.append("from adafruit_hid.keyboard_layout_us import KeyboardLayoutUS")
+            lines.append("from adafruit_hid.keycode import Keycode")
+            lines.append("")
+            lines.append("keyboard = Keyboard(usb_hid.devices)")
+            lines.append("keyboard_layout = KeyboardLayoutUS(keyboard)")
+            lines.append("")
+        else:
+            lines.append('"""')
+            lines.append(f"Happy Frog - {self.device_name} Generated Code")
+            lines.append("Educational HID Emulation Script")
+            lines.append("")
+            lines.append(f"Device: {self.device_name}")
+            lines.append(f"Processor: {self.processor}")
+            lines.append(f"Framework: {self.framework}")
+            lines.append("")
+            lines.append("This code was automatically generated from a Happy Frog Script.")
+            lines.append("Optimized for Seeed Xiao RP2040 with CircuitPython.")
+            lines.append("")
+            lines.append("⚠️ IMPORTANT: Use only for educational purposes and authorized testing!")
+            lines.append('"""')
+            lines.append("")
+            lines.append("import time")
+            lines.append("import board")
+            lines.append("import usb_hid")
+            lines.append("from adafruit_hid.keyboard import Keyboard")
+            lines.append("from adafruit_hid.keyboard_layout_us import KeyboardLayoutUS")
+            lines.append("from adafruit_hid.keycode import Keycode")
+            lines.append("")
+            lines.append("keyboard = Keyboard(usb_hid.devices)")
+            lines.append("keyboard_layout = KeyboardLayoutUS(keyboard)")
+            lines.append("")
+            lines.append("def main():")
+            lines.append("    # Wait for system to recognize the device")
+            lines.append("    time.sleep(2)")
+        
         return lines
 
     def generate_footer(self) -> List[str]:
         lines = []
-        lines.append("")
-        lines.append("if __name__ == '__main__':")
-        lines.append("    try:")
-        lines.append("        main()")
-        lines.append("    except Exception as e:")
-        lines.append("        print(f'Error during execution: {e}')")
-        lines.append("        keyboard.release_all()")
-        lines.append("    finally:")
-        lines.append("        print('Happy Frog execution completed.')")
+        
+        if not self.production_mode:
+            lines.append("")
+            lines.append("if __name__ == '__main__':")
+            lines.append("    try:")
+            lines.append("        main()")
+            lines.append("    except Exception as e:")
+            lines.append("        print(f'Error during execution: {e}')")
+            lines.append("        keyboard.release_all()")
+            lines.append("    finally:")
+            lines.append("        print('Happy Frog execution completed.')")
+        
         return lines
 
     def encode_command(self, command: HappyFrogCommand) -> List[str]:
         lines = []
+        
+        # Determine indentation based on production mode
+        indent = "" if self.production_mode else "    "
+        
         # Add Xiao RP2040-specific comment
-        comment = f"    # Xiao RP2040 Command: {command.raw_text}"
+        comment = f"{indent}# Xiao RP2040 Command: {command.raw_text}"
         lines.append(comment)
+        
+        # Handle comment lines (lines starting with #)
+        if command.raw_text.strip().startswith('#'):
+            # Skip comment lines - they're already handled by the comment above
+            return lines
+        
+        # Handle ATTACKMODE command (BadUSB attack mode configuration)
+        if command.command_type == CommandType.ATTACKMODE:
+            if command.parameters:
+                mode_config = ' '.join(command.parameters).upper()
+                if 'HID' in mode_config:
+                    lines.append(f"{indent}# ATTACKMODE: Configured for HID emulation ({mode_config})")
+                    lines.append(f"{indent}# Note: This device is configured as a HID keyboard/mouse")
+                    lines.append(f"{indent}# Configuration: {mode_config}")
+                elif 'STORAGE' in mode_config:
+                    lines.append(f"{indent}# ATTACKMODE: Configured for storage emulation ({mode_config})")
+                    lines.append(f"{indent}# Note: This device is configured as a storage device")
+                    lines.append(f"{indent}# Configuration: {mode_config}")
+                else:
+                    lines.append(f"{indent}# ATTACKMODE: Configured with '{mode_config}'")
+                    lines.append(f"{indent}# Note: This is a BadUSB attack mode configuration")
+                    lines.append(f"{indent}# Configuration: {mode_config}")
+            else:
+                lines.append(f"{indent}# ATTACKMODE: BadUSB attack mode configuration")
+            return lines
+        
         if command.command_type == CommandType.DELAY:
             try:
                 delay_ms = int(command.parameters[0])
-                lines.append(f"    time.sleep({delay_ms/1000:.3f})  # Delay {delay_ms}ms")
+                lines.append(f"{indent}time.sleep({delay_ms/1000:.3f})  # Delay {delay_ms}ms")
             except (ValueError, IndexError):
-                lines.append("    # ERROR: Invalid delay value")
+                lines.append(f"{indent}# ERROR: Invalid delay value")
         elif command.command_type == CommandType.STRING:
             if command.parameters:
                 text = command.parameters[0].replace('"', '\\"')
-                lines.append(f'    keyboard_layout.write("{text}")')
+                lines.append(f'{indent}keyboard_layout.write("{text}")')
             else:
-                lines.append("    # ERROR: STRING command missing text")
+                lines.append(f"{indent}# ERROR: STRING command missing text")
         elif command.command_type == CommandType.MODIFIER_COMBO:
             # Example: MOD r or CTRL ALT DEL
             for param in command.parameters:
                 keycode = self._get_keycode(param)
-                lines.append(f"    keyboard.press({keycode})")
+                lines.append(f"{indent}keyboard.press({keycode})")
             for param in reversed(command.parameters):
                 keycode = self._get_keycode(param)
-                lines.append(f"    keyboard.release({keycode})")
+                lines.append(f"{indent}keyboard.release({keycode})")
         else:
             # Standard key press/release
             keycode = self._get_keycode(command.command_type.value)
-            lines.append(f"    keyboard.press({keycode})")
-            lines.append(f"    keyboard.release({keycode})")
+            lines.append(f"{indent}keyboard.press({keycode})")
+            lines.append(f"{indent}keyboard.release({keycode})")
         return lines
 
     def _get_keycode(self, key: str) -> str:
@@ -142,4 +208,45 @@ class XiaoRP2040Encoder:
             'framework': self.framework,
             'optimizations': self.optimizations,
             'notes': 'Generates CircuitPython code for Seeed Xiao RP2040. Copy output to device as code.py.'
-        } 
+        }
+
+    def _generate_main_code(self, script: HappyFrogScript) -> List[str]:
+        """Generate the main execution code with ATTACKMODE detection."""
+        lines = []
+        
+        # Check if ATTACKMODE HID STORAGE is present for immediate execution
+        has_attackmode = any(
+            cmd.command_type == CommandType.ATTACKMODE and 
+            cmd.parameters and 
+            'HID' in ' '.join(cmd.parameters).upper()
+            for cmd in script.commands
+        )
+        
+        if self.production_mode:
+            if has_attackmode:
+                lines.append("# Production code - executes immediately on device boot/plug-in")
+                lines.append("# ATTACKMODE HID STORAGE detected - running payload automatically")
+                lines.append("")
+                lines.append("# Wait for system to recognize the device")
+                lines.append("time.sleep(2)")
+                lines.append("")
+            else:
+                lines.append("# Production code - main execution function")
+                lines.append("def main():")
+                lines.append("    # Wait for system to recognize the device")
+                lines.append("    time.sleep(2)")
+                lines.append("")
+        else:
+            # Educational mode - always use main() function
+            lines.append("# Main execution loop")
+            lines.append("def main():")
+            lines.append("    # Wait for system to recognize the device")
+            lines.append("    time.sleep(2)")
+            lines.append("")
+        
+        # Process each command
+        for i, command in enumerate(script.commands):
+            lines.extend(self.encode_command(command))
+            lines.append("")  # Add blank line for readability
+        
+        return lines 

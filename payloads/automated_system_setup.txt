@@ -1,0 +1,296 @@
+# 🖥️ Automated System Setup - Happy Frog Script
+# Real-world example: Automated system configuration and setup
+# 
+# Educational Purpose: Demonstrates practical HID automation for:
+# - System administration tasks
+# - Automated configuration
+# - IT support automation
+# - Educational demonstrations
+#
+# ⚠️ IMPORTANT: Use only on systems you own or have explicit permission to configure
+# This script demonstrates legitimate automation techniques for educational purposes
+
+# ========================================
+# SECTION 1: INITIALIZATION AND SAFETY
+# ========================================
+
+# Enable safe mode for educational use
+SAFE_MODE ON
+
+# Set default delay for consistent timing
+DEFAULT_DELAY 500
+
+# Log our actions for educational tracking
+LOG Starting automated system setup demonstration
+
+# Validate environment before proceeding
+VALIDATE system_ready
+
+# Wait for system to recognize the device
+DELAY 2000
+
+# ========================================
+# SECTION 2: SYSTEM INFORMATION GATHERING
+# ========================================
+
+LOG Gathering system information for educational purposes
+
+# Open System Information
+MOD r
+DELAY 1000
+STRING msinfo32
+ENTER
+DELAY 3000
+
+# Wait for system info to load
+DELAY 2000
+
+# Take a screenshot (Windows + PrintScreen)
+MOD PRINTSCREEN
+DELAY 1000
+
+# Close system information
+MOD f4
+DELAY 500
+
+# ========================================
+# SECTION 3: NETWORK CONFIGURATION DEMO
+# ========================================
+
+LOG Demonstrating network configuration automation
+
+# Open Network Settings
+MOD r
+DELAY 1000
+STRING ncpa.cpl
+ENTER
+DELAY 2000
+
+# Wait for network connections to load
+DELAY 1500
+
+# Close network settings
+MOD f4
+DELAY 500
+
+# ========================================
+# SECTION 4: SYSTEM MAINTENANCE TASKS
+# ========================================
+
+LOG Demonstrating system maintenance automation
+
+# Open Disk Cleanup
+MOD r
+DELAY 1000
+STRING cleanmgr
+ENTER
+DELAY 2000
+
+# Wait for disk cleanup to initialize
+DELAY 1500
+
+# Close disk cleanup (cancel the operation)
+ESCAPE
+DELAY 500
+
+# ========================================
+# SECTION 5: EDUCATIONAL DEMONSTRATION
+# ========================================
+
+LOG Creating educational demonstration document
+
+# Open Notepad for documentation
+MOD r
+DELAY 1000
+STRING notepad
+ENTER
+DELAY 1500
+
+# Type educational content
+STRING ========================================
+ENTER
+STRING Happy Frog - Automated System Setup Demo
+ENTER
+STRING ========================================
+ENTER
+ENTER
+STRING This demonstration shows how HID automation can be used for:
+ENTER
+STRING - System administration tasks
+ENTER
+STRING - Automated configuration
+ENTER
+STRING - IT support automation
+ENTER
+STRING - Educational purposes
+ENTER
+ENTER
+STRING Key Learning Points:
+ENTER
+STRING 1. HID devices can automate repetitive tasks
+ENTER
+STRING 2. Automation improves efficiency and consistency
+ENTER
+STRING 3. Understanding automation helps with defense
+ENTER
+STRING 4. Always use automation ethically and responsibly
+ENTER
+ENTER
+STRING Security Implications:
+ENTER
+STRING - Physical access can bypass many security measures
+ENTER
+STRING - HID attacks work at the input level
+ENTER
+STRING - This is why physical security is crucial
+ENTER
+STRING - Monitor for unexpected input devices
+ENTER
+ENTER
+STRING Defensive Measures:
+ENTER
+STRING - Disable USB ports when not in use
+ENTER
+STRING - Use USB port locks
+ENTER
+STRING - Monitor for unexpected input devices
+ENTER
+STRING - Implement input validation and rate limiting
+ENTER
+ENTER
+STRING Remember: Knowledge is power, but with great power comes great responsibility!
+ENTER
+ENTER
+STRING This demonstration was created with Happy Frog Script
+ENTER
+STRING Educational HID Emulation Framework
+ENTER
+ENTER
+STRING Date: 
+DELAY 500
+
+# Insert current date (example)
+STRING 2024-01-15
+ENTER
+ENTER
+STRING Time: 
+DELAY 500
+
+# Insert current time (example)
+STRING 14:30:00
+ENTER
+
+# ========================================
+# SECTION 6: CLEANUP AND COMPLETION
+# ========================================
+
+LOG Completing automated system setup demonstration
+
+# Save the document
+CTRL s
+DELAY 1000
+
+# Type filename
+STRING happy_frog_demo_notes.txt
+ENTER
+DELAY 1000
+
+# Close Notepad
+MOD f4
+DELAY 500
+
+# ========================================
+# SECTION 7: FINAL DEMONSTRATION
+# ========================================
+
+LOG Final demonstration: Opening the saved document
+
+# Open the saved document to verify
+MOD r
+DELAY 1000
+STRING notepad happy_frog_demo_notes.txt
+ENTER
+DELAY 2000
+
+# Wait a moment to show the document
+DELAY 3000
+
+# Close the document
+MOD f4
+DELAY 500
+
+# ========================================
+# SECTION 8: COMPLETION AND LOGGING
+# ========================================
+
+LOG Automated system setup demonstration completed successfully
+
+# Final educational message
+MOD r
+DELAY 1000
+STRING cmd
+ENTER
+DELAY 1500
+
+# Type completion message
+STRING echo.
+ENTER
+STRING echo ========================================
+ENTER
+STRING echo Happy Frog Demo Completed Successfully!
+ENTER
+STRING echo ========================================
+ENTER
+STRING echo.
+ENTER
+STRING echo Educational demonstration completed.
+ENTER
+STRING echo This shows legitimate uses of HID automation.
+ENTER
+STRING echo.
+ENTER
+STRING echo Key takeaways:
+ENTER
+STRING echo - HID automation can improve efficiency
+ENTER
+STRING echo - Understanding automation helps with defense
+ENTER
+STRING echo - Always use automation ethically
+ENTER
+STRING echo - Physical security is crucial
+ENTER
+STRING echo.
+ENTER
+STRING echo Remember: Use responsibly and ethically!
+ENTER
+STRING echo.
+ENTER
+STRING pause
+ENTER
+
+# Wait for user acknowledgment
+DELAY 2000
+
+# Close command prompt
+STRING exit
+ENTER
+
+# ========================================
+# EDUCATIONAL NOTES
+# ========================================
+
+# This script demonstrates:
+# 1. Legitimate system administration automation
+# 2. Educational HID emulation concepts
+# 3. Safe and responsible automation practices
+# 4. Real-world applications of HID technology
+#
+# Use cases for this type of automation:
+# - IT support automation
+# - System deployment scripts
+# - Educational demonstrations
+# - Security testing (with permission)
+# - Accessibility assistance
+#
+# Remember: This is for educational purposes only.
+# Always obtain proper authorization before testing on any system. 

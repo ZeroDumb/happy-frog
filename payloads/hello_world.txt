@@ -7,6 +7,13 @@
 # Wait for system to recognize the device
 DELAY 1000
 
+#ATTACKMODE HID STORAGE
+
+# Open notepad
+MOD r
+STRING notepad
+ENTER
+
 # Type a greeting message
 STRING Hello, World! This is Happy Frog Script in action!
 ENTER

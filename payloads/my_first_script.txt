@@ -1,6 +1,7 @@
 # My First Happy Frog Script
 # Educational example - opens Notepad and types a message
 
+#ATTACKMODE HID STORAGE
 DELAY 2000
 MOD r
 DELAY 500

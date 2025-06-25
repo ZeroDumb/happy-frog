@@ -14,7 +14,7 @@ def read_readme():
 
 setup(
     name="happy-frog",
-    version="0.1.7",
+    version="0.1.8",
     author="ZeroDumb",
     author_email="zero@zerodumb.dev",
     description="Educational HID emulation framework for cybersecurity learning",
@@ -54,7 +54,6 @@ setup(
     include_package_data=True,
     package_data={
         "happy_frog_parser": ["*.py"],
-        "ducky_parser": ["*.py"],
         "devices": ["*.py"],
         "payloads": ["*.txt"],
     },

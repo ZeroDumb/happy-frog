@@ -129,9 +129,13 @@ class DeviceManager:
         encoder_class = self.devices[device_id]['encoder_class']
         return encoder_class()
     
-    def encode_script(self, script: HappyFrogScript, device_id: str, output_file: Optional[str] = None) -> str:
+    def encode_script(self, script: HappyFrogScript, device_id: str, output_file: Optional[str] = None, production_mode: bool = False) -> str:
         """Encode a script for a specific device."""
         encoder = self.create_encoder(device_id)
+        
+        # Set production mode if supported
+        if hasattr(encoder, 'set_production_mode'):
+            encoder.set_production_mode(production_mode)
         
         # Generate device-specific code
         code_lines = []
@@ -139,8 +143,11 @@ class DeviceManager:
         # Add header
         code_lines.extend(encoder.generate_header(script))
         
-        # Add main execution code
-        code_lines.extend(self._generate_main_code(encoder, script))
+        # Add main execution code - use device-specific method if available
+        if hasattr(encoder, '_generate_main_code'):
+            code_lines.extend(encoder._generate_main_code(script))
+        else:
+            code_lines.extend(self._generate_main_code(encoder, script))
         
         # Add footer
         code_lines.extend(encoder.generate_footer())

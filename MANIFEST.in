@@ -14,7 +14,6 @@ recursive-include payloads *.txt
 
 # Include core modules
 recursive-include happy_frog_parser *.py
-recursive-include ducky_parser *.py
 recursive-include devices *.py
 
 # Include ducky_converter

