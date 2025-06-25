@@ -268,6 +268,16 @@ class DuckyConverter:
                 severity='info'
             ))
         
+        # Add stealth conversion for PowerShell commands
+        if converted_line.upper().startswith('STRING ') and 'powershell' in converted_line.lower():
+            converted_line = self._add_stealth_to_powershell(converted_line)
+            warnings.append(ConversionWarning(
+                line_number=line_number,
+                warning_type='stealth_conversion',
+                message='PowerShell command converted to stealth mode (hidden window)',
+                severity='info'
+            ))
+        
         # Check for potentially dangerous commands
         if converted_line.upper().startswith('STRING '):
             string_content = converted_line[7:]  # Remove 'STRING ' prefix
@@ -275,6 +285,40 @@ class DuckyConverter:
             warnings.extend(danger_warnings)
         
         return converted_line, warnings
+    
+    def _add_stealth_to_powershell(self, line: str) -> str:
+        """
+        Add stealth options to PowerShell commands.
+        
+        Args:
+            line: The original STRING line containing PowerShell
+            
+        Returns:
+            Modified line with stealth options
+        """
+        # Extract the PowerShell command
+        if line.upper().startswith('STRING '):
+            command = line[7:]  # Remove 'STRING ' prefix
+            
+            # Add stealth options to PowerShell commands
+            if 'powershell' in command.lower():
+                # Replace basic PowerShell with stealth version
+                if 'powershell -command' in command.lower():
+                    command = command.replace('powershell -command', 'powershell -WindowStyle Hidden -NoProfile -NonInteractive -Command')
+                elif 'powershell -c' in command.lower():
+                    command = command.replace('powershell -c', 'powershell -WindowStyle Hidden -NoProfile -NonInteractive -Command')
+                elif 'powershell' in command.lower() and not any(flag in command.lower() for flag in ['-windowstyle', '-noprofile', '-noninteractive']):
+                    # Add stealth flags to basic PowerShell
+                    command = command.replace('powershell', 'powershell -WindowStyle Hidden -NoProfile -NonInteractive')
+                
+                # For commands that should run silently, add Start-Process wrapper
+                if any(keyword in command.lower() for keyword in ['invoke-webrequest', 'reg add', 'rundll32']):
+                    # Wrap in Start-Process for silent execution
+                    command = f'Start-Process powershell -WindowStyle Hidden -ArgumentList "-NoProfile", "-NonInteractive", "-Command", "{command}" -Wait'
+            
+            return f'STRING {command}'
+        
+        return line
     
     def _check_dangerous_content(self, content: str, line_number: int) -> List[ConversionWarning]:
         """

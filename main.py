@@ -335,13 +335,12 @@ def convert_command(args):
         # Print conversion report
         converter.print_conversion_report(warnings, args.input_file)
         
-        # Determine output file name
+        # Determine the actual output file path (where it was actually saved)
         if args.output:
             output_file = args.output
         else:
             input_path = Path(args.input_file)
-            output_filename = f"{input_path.stem}_converted{input_path.suffix}"
-            output_file = Path('compiled') / output_filename
+            output_file = input_path.with_name(f"{input_path.stem}_converted{input_path.suffix}")
         
         print(f"\n✅ Successfully converted to: {output_file}")
         

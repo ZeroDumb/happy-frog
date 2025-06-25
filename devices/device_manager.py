@@ -19,7 +19,7 @@ from devices.arduino_leonardo import ArduinoLeonardoEncoder
 from devices.teensy_4 import Teensy4Encoder
 from devices.digispark import DigiSparkEncoder
 from devices.esp32 import ESP32Encoder
-from devices.xiao_rp2040_encoder import XiaoRP2040Encoder
+from devices.xiao_rp2040 import XiaoRP2040Encoder
 from devices.evilcrow_cable import EvilCrowCableEncoder
 
 

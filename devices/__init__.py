@@ -12,7 +12,7 @@ License: GNU GPLv3
 """
 
 from .device_manager import DeviceManager
-from .xiao_rp2040_encoder import XiaoRP2040Encoder
+from .xiao_rp2040 import XiaoRP2040Encoder
 from .esp32 import ESP32Encoder
 from .digispark import DigiSparkEncoder
 from .teensy_4 import Teensy4Encoder
