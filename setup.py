@@ -9,12 +9,15 @@ import os
 
 # Read the README file for long description
 def read_readme():
-    with open("README.md", "r", encoding="utf-8") as fh:
-        return fh.read()
+    try:
+        with open("README.md", "r", encoding="utf-8") as fh:
+            return fh.read()
+    except FileNotFoundError:
+        return "Educational HID emulation framework for cybersecurity learning"
 
 setup(
-    name="happy-frog",
-    version="0.2.1",
+    name="happy_frog",
+    version="0.2.3",
     author="ZeroDumb",
     author_email="zero@zerodumb.dev",
     description="Educational HID emulation framework for cybersecurity learning",
@@ -29,6 +32,7 @@ setup(
         "Intended Audience :: Information Technology",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
