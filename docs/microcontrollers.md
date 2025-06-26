@@ -6,6 +6,8 @@ This guide covers the setup and configuration of microcontrollers for use with H
 
 ### Seeed Xiao RP2040 (Primary Recommendation)
 
+![Screenshot 2025-06-26 144035](https://github.com/user-attachments/assets/80f5cd55-c4ba-4b86-86c8-b959b4d24372)
+
 **Why Choose the Xiao RP2040:**
 - ✅ **Affordable**: ~$5-8 USD
 - ✅ **Powerful**: Dual-core ARM Cortex-M0+ at 133MHz
@@ -28,6 +30,12 @@ This guide covers the setup and configuration of microcontrollers for use with H
 - [Amazon](https://www.amazon.com/s?k=seeed+xiao+rp2040)
 - [Adafruit](https://www.adafruit.com/product/4864)
 
+**USBA to USBC M-M**
+- [Amazon](https://a.co/d/8QPZOx5)
+
+![IMG_3282](https://github.com/user-attachments/assets/cf64a801-9ec2-4b2a-854a-2c21ea4f8a49)
+
+
 ## 🔧 Setup Instructions
 
 ### Step 1: Install CircuitPython
@@ -39,14 +47,16 @@ This guide covers the setup and configuration of microcontrollers for use with H
 
 
 2. **Enter Bootloader Mode**
+   - Hold the button with a 'B' next to it
    - Connect your Xiao RP2040 via USB-C
-   - Double-tap the reset button
    - The device should appear as a USB drive named `RPI-RP2`
 
 3. **Flash CircuitPython**
    - Copy the downloaded `.uf2` file to the `RPI-RP2` drive
    - The device will automatically restart
    - You should now see a `CIRCUITPY` drive
+
+![Screenshot 2025-06-26 144052](https://github.com/user-attachments/assets/fc8bed90-7c0d-4d9c-8f9d-a41d7131e159)
 
 4. **Verify Installation**
    - Open the `CIRCUITPY` drive
@@ -59,7 +69,7 @@ This guide covers the setup and configuration of microcontrollers for use with H
    - Go to [circuitpython.org/libraries](https://circuitpython.org/libraries)
    - Download the latest library bundle
 
-
+![Screenshot 2025-06-26 144016](https://github.com/user-attachments/assets/c77311cb-b888-4df7-ac77-dd41e94a93ef)
 
 2. **Extract and Copy Libraries**
    - Extract the downloaded bundle
@@ -125,6 +135,8 @@ This guide covers the setup and configuration of microcontrollers for use with H
    - Connect to a test computer and observe the output
 
    ***IMPORTANT!!! whatever code you put into code.py WILL AUTOMATICALLY RUN THE INSTANT YOU DO THIS in ATTACKMODE*** please know what you are writing, I am not responsible if you freakin dox yourself or you give your pc a cold. To avoid anything from auto running on your device, you can:
+
+![Screenshot 2025-06-26 145823](https://github.com/user-attachments/assets/e607c929-3a07-4b65-af52-57e0cafb2407)
 
 ##  Testing Method Options 
 
