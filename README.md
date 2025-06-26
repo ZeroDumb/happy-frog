@@ -6,6 +6,9 @@ Welcome to **Happy Frog** — your new favorite educational mayhem engine disgui
 
 Didn't think so.
 
+![IMG_3281](https://github.com/user-attachments/assets/f023bf60-4578-4d83-843b-cc087e973889)
+
+
 ##  What Even Is This?
 
 This is not a toy. Unless you play in cybersecurity labs for fun (we do). Happy Frog is your customizable, open-source playground for learning how **automated input attacks** work — ethically, responsibly, and with just enough flair to make your sysadmin sweat. It's ducky script, reimagined. Simpler, safer, more sarcastic.
