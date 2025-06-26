@@ -17,7 +17,7 @@ def read_readme():
 
 setup(
     name="happy_frog",
-    version="0.2.3",
+    version="0.2.4",
     author="ZeroDumb",
     author_email="zero@zerodumb.dev",
     description="Educational HID emulation framework for cybersecurity learning",

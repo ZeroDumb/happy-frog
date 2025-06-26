@@ -269,6 +269,13 @@ class CircuitPythonEncoder:
                 lines.append(f"    # WARNING: Unknown command '{command.command_type}'")
             lines.append("    pass")
         
+        # Apply default delay after each command (except for DELAY, DEFAULT_DELAY, and comments)
+        if (self.default_delay > 0 and 
+            command.command_type not in [CommandType.DELAY, CommandType.DEFAULT_DELAY, CommandType.DEFAULTDELAY, 
+                                        CommandType.COMMENT, CommandType.REM, CommandType.IF, CommandType.ELSE, 
+                                        CommandType.ENDIF, CommandType.WHILE, CommandType.ENDWHILE]):
+            lines.append(f"{indent}time.sleep(default_delay)  # Default delay: {self.default_delay}ms")
+        
         lines.append("")  # Add blank line for readability
         return lines
     
@@ -623,9 +630,10 @@ Generated from Happy Frog Script
                 raise EncoderError("Default delay value must be non-negative")
             
             self.default_delay = delay_ms
+            indent = "    " if self.safe_mode else ""
             return [
-                f"    # DEFAULT_DELAY: Set default delay to {delay_ms}ms between commands",
-                f"    default_delay = {delay_ms / 1000.0}  # Convert to seconds"
+                f"{indent}# DEFAULT_DELAY: Set default delay to {delay_ms}ms between commands",
+                f"{indent}default_delay = {delay_ms / 1000.0}  # Convert to seconds"
             ]
             
         except ValueError:
