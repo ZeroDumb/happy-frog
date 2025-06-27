@@ -1,8 +1,8 @@
-# Happy Frog Usage Guide
+# 🐸 Happy Frog Usage Guide
 
-This guide explains how to use Happy Frog for educational cybersecurity purposes. **Remember: This tool is for authorized testing and education only.**
+Welcome to Happy Frog! This comprehensive guide will walk you through using Happy Frog for educational cybersecurity purposes. **Remember: This tool is for authorized testing and education only.**
 
-## ⚠️ Legal and Ethical Guidelines
+##  Legal and Ethical Guidelines
 
 Before using Happy Frog, you **MUST** understand and agree to these guidelines:
 
@@ -21,109 +21,280 @@ Before using Happy Frog, you **MUST** understand and agree to these guidelines:
 
 **By using this tool, you accept full responsibility for ensuring your use is legal and ethical.**
 
-## 🚀 Quick Start
+---
 
-### 1. Installation
+##  Quick Start
 
+### Installation Options
+
+#### Option 1: Install from PyPI (Recommended)
+```bash
+# Install the latest version
+pip install happy-frog #(latest)
+
+# Install a specific version
+pip install happy-frog==0.2.4 #(stable)
+
+# Verify installation
+happy-frog --help
+```
+
+#### Option 2: Development Installation
 ```bash
 # Clone the repository
 git clone https://github.com/ZeroDumb/happy-frog.git
 cd happy-frog
 
-# Install dependencies
-pip install -r requirements.txt
-
-# Install the package
+# Install in development mode
 pip install -e .
+
+# Or install dependencies directly
+pip install -r requirements.txt
 ```
 
-### 2. Basic Usage
+### Your First Script
+
+1. **List available sample payloads:**
+   ```bash
+   happy-frog list-payloads
+   ```
+
+2. **Copy a sample payload to your working directory:**
+   ```bash
+   happy-frog copy-payload hello_world.txt ./my_script.txt
+   ```
+
+3. **Generate device code:**
+   ```bash
+   happy-frog encode my_script.txt -d xiao_rp2040 -o output.py
+   ```
+
+4. **Upload to your device and test!**
+
+---
+
+##  Hardware Requirements
+
+### Recommended Hardware
+
+####  **Seeed Xiao RP2040** (~$5-8) - **Primary Recommendation**
+- **Why**: Affordable, powerful, easy to use
+- **Buy from**: [Seeed Studio](https://www.seeedstudio.com/XIAO-RP2040-v1-0-p-5026.html) | [Amazon](https://www.amazon.com/s?k=seeed+xiao+rp2040) | [Adafruit](https://www.adafruit.com/product/4864)
+- **Specs**: Dual-core ARM, 264KB RAM, 2MB Flash, USB-C
+
+####  **Raspberry Pi Pico** (~$4-6)
+- **Why**: Official Raspberry Pi product, same chip as Xiao
+- **Buy from**: [Raspberry Pi Store](https://www.raspberrypi.com/products/raspberry-pi-pico/) | [Amazon](https://www.amazon.com/s?k=raspberry+pi+pico)
+- **Specs**: Same RP2040 chip, slightly larger form factor
+
+####  **Budget Option: DigiSpark** (~$2-4)
+- **Why**: Ultra-cheap, very small
+- **Buy from**: [Amazon](https://www.amazon.com/s?k=digispark+attiny85) | [eBay](https://www.ebay.com/sch/i.html?_nkw=digispark+attiny85)
+- **Specs**: ATtiny85, 8KB flash, 512B RAM
+
+####  **Advanced Option: EvilCrow-Cable** (~$15-30)
+- **Why**: Specialized BadUSB device with built-in USB-C connectors
+- **Buy from**: [Rabbit-Labs](https://rabbit-labs.com/) | [DIY Build](https://github.com/joelsernamoreno/EvilCrow-Cable/blob/master/README.md)
+- **Specs**: ATtiny85, 8KB flash, 512B RAM, built-in USB-C
+- **Note**: Advanced users only - designed for cybersecurity research
+
+### Software Requirements
+- **Computer**: Windows, Mac, or Linux
+- **Python**: Version 3.7 or higher
+- **USB Cable**: USB-C (Xiao/Pico) or Micro-USB (DigiSpark)
+- **Text Editor**: VS Code, Notepad++, or any text editor
+
+---
+
+##  CLI Reference
+
+### Available Commands
 
 ```bash
-# Convert a Ducky Script to CircuitPython
-happy-frog payloads/hello_world.txt -o output.py
+# Parse and analyze a script
+happy-frog parse <input_file> [--verbose]
 
-# Validate a script without generating output
-happy-frog payloads/hello_world.txt --validate
+# Encode script to device-specific code
+happy-frog encode <input_file> [-o output] [--device device] [--production] [--verbose]
 
-# Get verbose output
-happy-frog payloads/hello_world.txt -o output.py --verbose
+# Validate a script for errors
+happy-frog validate <input_file> [--verbose]
+
+# Convert Ducky Script to Happy Frog Script
+happy-frog convert <input_file> [-o output] [--verbose]
+
+# List available sample payloads
+happy-frog list-payloads
+
+# Copy a sample payload to destination
+happy-frog copy-payload <payload_name> <destination>
 ```
 
-## 📝 Writing Ducky Scripts
+### Command Details
 
-Ducky Script is a simple scripting language for automating keyboard input. Here's how to write your own scripts:
+#### Parse Command
+```bash
+happy-frog parse my_script.txt
+happy-frog parse my_script.txt --verbose
+```
+- **Purpose**: Analyze script structure and validate syntax
+- **Output**: Shows command count, line count, and any warnings
+
+#### Encode Command
+```bash
+# Basic encoding
+happy-frog encode my_script.txt
+
+# Device-specific encoding
+happy-frog encode my_script.txt -d xiao_rp2040
+
+# Production mode (runs immediately on boot)
+happy-frog encode my_script.txt -d xiao_rp2040 -p
+
+# Custom output location
+happy-frog encode my_script.txt -o custom_output.py
+
+# Verbose output with code preview
+happy-frog encode my_script.txt --verbose
+```
+
+#### Validate Command
+```bash
+happy-frog validate my_script.txt
+happy-frog validate my_script.txt --verbose
+```
+- **Purpose**: Check script for syntax errors and potential issues
+- **Output**: Shows validation results and warnings
+
+#### Convert Command
+```bash
+happy-frog convert ducky_script.txt
+happy-frog convert ducky_script.txt -o converted_script.txt
+```
+- **Purpose**: Convert legacy Ducky Script to modern Happy Frog Script format
+
+#### List Payloads Command
+```bash
+happy-frog list-payloads
+```
+- **Purpose**: Show all available sample payloads included with Happy Frog
+
+#### Copy Payload Command
+```bash
+happy-frog copy-payload hello_world.txt ./my_script.txt
+```
+- **Purpose**: Copy a sample payload to your working directory
+
+### Device Selection
+
+Use `--device (-d)` to generate code for specific microcontrollers:
+
+| Device ID | Name | Output Format |
+|-----------|------|---------------|
+| `xiao_rp2040` | Seeed Xiao RP2040 (recommended) | `.py` |
+| `raspberry_pi_pico` | Raspberry Pi Pico | `.py` |
+| `arduino_leonardo` | Arduino Leonardo | `.ino` |
+| `teensy_4` | Teensy 4.0 | `.ino` |
+| `digispark` | DigiSpark | `.ino` |
+| `esp32` | ESP32 | `.py` |
+| `evilcrow_cable` | EvilCrow-Cable | `.ino` |
+
+### Production Mode
+
+The `--production (-p)` flag generates code that runs immediately on boot:
+- **Educational Mode** (default): Includes `main()` function, requires manual execution
+- **Production Mode**: Code runs automatically when device boots (uses ATTACKMODE)
+
+---
+
+##  Writing Happy Frog Scripts
+
+Happy Frog Script is a simple scripting language for automating keyboard input. It's compatible with Ducky Script but includes additional features.
 
 ### Basic Commands
 
-#### DELAY
-Wait for a specified number of milliseconds:
-```
-DELAY 1000  # Wait for 1 second
-```
-
-#### STRING
-Type text as if it was typed on a keyboard:
-```
-STRING Hello World!
+#### Timing Commands
+```txt
+DELAY 1000          # Wait for 1 second
+DEFAULT_DELAY 500   # Set default delay for all commands
+RANDOM_DELAY 200 800 # Random delay between 200-800ms
 ```
 
-#### ENTER
-Press the Enter key:
-```
-ENTER
+#### Input Commands
+```txt
+STRING Hello World! # Type text
+ENTER              # Press Enter key
+SPACE              # Press Space key
+TAB                # Press Tab key
+BACKSPACE          # Press Backspace key
+DELETE             # Press Delete key
 ```
 
-#### Special Keys
-Press special keys:
-```
-SPACE
-TAB
-BACKSPACE
-DELETE
-UP
-DOWN
-LEFT
-RIGHT
-HOME
-END
-INSERT
-PAGE_UP
-PAGE_DOWN
-ESCAPE
+#### Navigation Commands
+```txt
+UP                 # Up arrow
+DOWN               # Down arrow
+LEFT               # Left arrow
+RIGHT              # Right arrow
+HOME               # Home key
+END                # End key
+PAGE_UP            # Page Up key
+PAGE_DOWN          # Page Down key
 ```
 
 #### Function Keys
-Press function keys:
-```
-F1
-F2
-F3
-F4
-F5
-F6
-F7
-F8
-F9
-F10
-F11
-F12
+```txt
+F1 F2 F3 F4 F5 F6 F7 F8 F9 F10 F11 F12
 ```
 
 #### Modifier Keys
-Press modifier keys (use with other keys):
-```
-CTRL
-SHIFT
-ALT
-GUI  # Windows/Command key
+```txt
+CTRL               # Control key
+SHIFT              # Shift key
+ALT                # Alt key
+MOD                # Windows/Command/Super key
 ```
 
-#### Comments
-Add comments to your scripts:
+#### Key Combinations
+```txt
+MOD r              # Windows+R (Run dialog)
+CTRL c             # Copy
+CTRL v             # Paste
+CTRL ALT DEL       # Task Manager
+SHIFT F1           # Help
 ```
+
+#### Special Commands
+```txt
+ATTACKMODE         # Enable immediate execution on boot
 # This is a comment
 REM This is also a comment
+```
+
+### Advanced Features (Happy Frog Exclusive)
+
+#### Conditional Logic
+```txt
+IF system_windows
+STRING Windows system detected
+ELSE
+STRING Non-Windows system detected
+ENDIF
+```
+
+#### Loops
+```txt
+WHILE counter < 3
+STRING Loop iteration
+ENTER
+RANDOM_DELAY 100 300
+ENDWHILE
+```
+
+#### Logging and Validation
+```txt
+LOG Starting automation sequence
+VALIDATE system_windows
 ```
 
 ### Example Scripts
@@ -140,152 +311,146 @@ ENTER
 
 #### Open Command Prompt (Windows)
 ```txt
-# Open command prompt
+# Open Windows Command Prompt
 DELAY 2000
-GUI r
+MOD r
 DELAY 500
 STRING cmd
 ENTER
 DELAY 1000
 STRING echo Hello World!
 ENTER
-```
-
-#### System Information
-```txt
-# Get system information
-DELAY 2000
-GUI r
 DELAY 500
-STRING cmd
-ENTER
-DELAY 1000
-STRING systeminfo
-ENTER
-DELAY 2000
 STRING exit
 ENTER
 ```
 
-## 🔧 CLI Reference
+#### Educational Demo with Advanced Features
+```txt
+# Educational demonstration with Happy Frog features
+DEFAULT_DELAY 500
+LOG Starting educational demo
 
-### Basic Commands
+IF system_windows
+STRING Windows system detected
+ELSE
+STRING Non-Windows system detected
+ENDIF
 
-```bash
-# Convert script to CircuitPython
-happy-frog <input_file> -o <output_file>
+WHILE counter < 3
+STRING Loop iteration
+ENTER
+RANDOM_DELAY 100 300
+ENDWHILE
 
-# Validate script
-happy-frog <input_file> --validate
-
-# Show help
-happy-frog --help
-
-# List supported commands
-happy-frog --list-commands
-
-# Show educational information
-happy-frog --educational
+STRING Thank you for learning about cybersecurity!
+ENTER
 ```
 
-### Command Line Options
+---
 
-| Option | Description |
-|--------|-------------|
-| `input_file` | Path to Ducky Script file (.txt) |
-| `-o, --output` | Output file path for generated code |
-| `--verbose, -v` | Enable verbose output |
-| `--validate` | Validate script without generating output |
-| `--list-commands` | List all supported commands |
-| `--educational` | Show educational information |
-| `--version` | Show version information |
+##  Hardware Setup
 
-### Examples
+### Step-by-Step Microcontroller Setup
 
-```bash
-# Basic conversion
-happy-frog my_script.txt -o output.py
+#### For Seeed Xiao RP2040 (Recommended)
 
-# Verbose output with validation
-happy-frog my_script.txt -o output.py --verbose --validate
+1. **Download CircuitPython:**
+   - Go to [circuitpython.org](https://circuitpython.org/)
+   - Find "Seeed XIAO RP2040" in the board list
+   - Download the `.uf2` file
 
-# Just validate a script
-happy-frog my_script.txt --validate
+2. **Enter bootloader mode:**
+   - Connect your Xiao RP2040 via USB-C
+   - **Double-tap the reset button** (small button on the board)
+   - Your computer should show a new USB drive named `RPI-RP2`
 
-# Get help
-happy-frog --help
-```
+3. **Install CircuitPython:**
+   - Copy the downloaded `.uf2` file to the `RPI-RP2` drive
+   - The device will restart automatically
+   - You should now see a `CIRCUITPY` drive
 
-## 🐸 Flashing to Microcontrollers
+4. **Install required libraries:**
+   - Go to [circuitpython.org/libraries](https://circuitpython.org/libraries)
+   - Download the latest library bundle
+   - Extract the bundle
+   - Create a `lib` folder on your `CIRCUITPY` drive
+   - Copy these folders to `lib`:
+     - `adafruit_hid`
+     - `adafruit_hid.keyboard`
+     - `adafruit_hid.keyboard_layout_us`
+     - `adafruit_hid.keycode`
 
-### Prerequisites
+#### For Other Devices
+- **Raspberry Pi Pico**: Follow same steps as Xiao RP2040 (same chip)
+- **DigiSpark**: Requires Arduino IDE setup (see `docs/microcontrollers.md`)
+- **Other devices**: See `docs/microcontrollers.md` for detailed instructions
 
-1. **CircuitPython Firmware**: Install CircuitPython on your microcontroller
-2. **Required Libraries**: Install `adafruit_hid` library
-3. **USB Cable**: Connect your device to your computer
+### Testing Your Device
 
-### Supported Devices
-
-- **Seeed Xiao RP2040** (Recommended)
-- Other CircuitPython-compatible boards
-
-### Step-by-Step Instructions
-
-#### 1. Install CircuitPython
-
-1. Download CircuitPython for your board from [circuitpython.org](https://circuitpython.org/)
-2. Follow the installation instructions for your specific board
-3. Verify installation by seeing a `CIRCUITPY` drive when connected
-
-#### 2. Install Required Libraries
-
-1. Download the CircuitPython Library Bundle
-2. Copy the `adafruit_hid` folder to the `lib` folder on your device
-3. Verify the libraries are installed correctly
-
-#### 3. Upload Generated Code
-
-1. Generate CircuitPython code using Happy Frog:
+1. **Create a test script:**
    ```bash
-   happy-frog payloads/hello_world.txt -o output.py
+   happy-frog copy-payload hello_world.txt ./test_script.txt
    ```
 
-2. Copy the generated `output.py` to your device as `code.py`
-3. The device will automatically run the code when powered on
+2. **Generate device code:**
+   ```bash
+   happy-frog encode test_script.txt -d xiao_rp2040 -o test_output.py
+   ```
 
-#### 4. Testing
+3. **Upload to device:**
+   - Copy `test_output.py` to your `CIRCUITPY` drive as `code.py`
+   - The device will automatically run the code
 
-1. Connect your device to a test computer
-2. Wait for the device to be recognized
-3. Observe the automated input behavior
-4. **Always test in controlled environments**
+4. **Test:**
+   - Connect to a test computer
+   - Observe the automated input behavior
+   - **Always test in controlled environments**
 
-### Safety Features
+---
 
-The generated code includes several safety features:
+##  Safety and Best Practices
 
-- **Startup Delay**: Waits for system recognition
-- **Error Handling**: Graceful error recovery
-- **Emergency Stop**: Can be interrupted safely
-- **Educational Comments**: Explains what each command does
+### Physical Security
+- **Store devices securely** when not in use
+- **Label your devices** clearly as educational tools
+- **Keep inventory** of all your devices
+- **Never leave devices** in public or unsecured areas
 
-## 🛡️ Security Best Practices
+### Operational Security
+- **Test only on systems you own** or have explicit permission
+- **Use isolated test environments** when possible
+- **Disconnect from networks** during testing
+- **Monitor for unexpected behavior**
 
-### For Testing
+### Testing Environments
 
-1. **Use Virtual Machines**: Test in isolated environments
-2. **Disconnect Networks**: Prevent unintended network access
-3. **Monitor Activity**: Watch for unexpected behavior
-4. **Document Everything**: Keep records of all testing
+#### Option 1: Virtual Machine (Recommended)
+- **VM Software**: Use VirtualBox, VMware, or Hyper-V
+- **Isolated Environment**: No access to host system or network
+- **Snapshot Before Testing**: Create restore points
+- **Disconnect Network**: Remove network adapters during testing
 
-### For Defense
+#### Option 2: Dedicated Test Machine
+- **Old Laptop**: Use a spare/old computer
+- **No Important Data**: Wipe and reinstall OS
+- **No Network**: Disconnect WiFi/Ethernet
+- **No Personal Accounts**: Use test accounts only
 
-1. **Physical Security**: Control access to USB ports
-2. **Device Monitoring**: Watch for unexpected input devices
-3. **Input Validation**: Implement rate limiting and validation
-4. **User Awareness**: Train users about HID attack risks
+#### Option 3: Live USB/DVD
+- **Linux Live USB**: Ubuntu, Kali Linux, or Tails
+- **No Installation**: Runs from USB without affecting system
+- **Temporary**: No permanent changes
 
-## 🎓 Educational Concepts
+### Educational Best Practices
+- **Document everything** you do
+- **Get written permission** before testing on any system
+- **Report vulnerabilities** responsibly if found
+- **Share knowledge** with the cybersecurity community
+
+---
+
+##  Educational Concepts
 
 Happy Frog demonstrates several important cybersecurity concepts:
 
@@ -304,41 +469,88 @@ Happy Frog demonstrates several important cybersecurity concepts:
 - **How**: Devices can be programmed for various purposes
 - **Defense**: Secure development and deployment practices
 
-## 🐛 Troubleshooting
+---
+
+##  Troubleshooting
 
 ### Common Issues
 
 #### Device Not Recognized
-- Ensure CircuitPython is properly installed
-- Check USB cable and connections
-- Verify device drivers are installed
+- **Check USB cable** - try a different cable
+- **Check USB port** - try a different port
+- **Restart device** - unplug and reconnect
+- **Check drivers** - may need to install drivers
+
+#### Code Not Running
+- **Check file name** - must be `code.py`
+- **Check syntax** - look for Python errors
+- **Check libraries** - ensure `adafruit_hid` is installed
+- **Check CircuitPython** - ensure firmware is installed
 
 #### Script Not Working
-- Check for syntax errors in Ducky Script
-- Verify timing and delays are appropriate
-- Test in a controlled environment first
+- **Check delays** - add longer delays if needed
+- **Check target system** - ensure it's ready for input
+- **Check permissions** - ensure you have permission to test
+- **Check script syntax** - validate with `happy-frog validate script.txt`
 
-#### Permission Errors
-- Run CLI with appropriate permissions
-- Check file paths and permissions
-- Ensure output directory is writable
+#### CLI Issues
+- **Check installation** - run `happy-frog --help`
+- **Check file paths** - ensure files exist and are accessible
+- **Check permissions** - ensure output directory is writable
 
 ### Getting Help
 
-1. Check the [GitHub Issues](https://github.com/ZeroDumb/happy-frog/issues)
-2. Review the documentation
-3. Test with sample payloads first
-4. Use the `--verbose` flag for detailed output
+1. **Use the CLI help:**
+   ```bash
+   happy-frog --help
+   happy-frog encode --help
+   happy-frog validate --help
+   ```
 
-## 📚 Additional Resources
+2. **Check the documentation:**
+   - `docs/microcontrollers.md` - Hardware setup guide
+   - `docs/How_We_Are_Different.md` - What sets Happy Frog apart
+
+3. **Look at examples:**
+   ```bash
+   happy-frog list-payloads
+   happy-frog copy-payload hello_world.txt ./example.txt
+   ```
+
+4. **Join the community:**
+   - GitHub Issues: [Report bugs or ask questions](https://github.com/ZeroDumb/happy-frog/issues)
+   - GitHub Discussions: [Share ideas and get help](https://github.com/ZeroDumb/happy-frog/discussions)
+
+---
+
+##  Additional Resources
 
 - [CircuitPython Documentation](https://docs.circuitpython.org/)
 - [Adafruit HID Library](https://github.com/adafruit/Adafruit_CircuitPython_HID)
 - [USB HID Specification](https://www.usb.org/document-library/device-class-definition-hid-111)
 - [Cybersecurity Education Resources](https://www.sans.org/cyber-security-courses/)
 
-## ⚖️ Legal Notice
+---
 
-This software is provided "as is" without warranty. Users are responsible for ensuring their use complies with applicable laws and regulations. The authors disclaim all liability for misuse of this software.
+##  Congratulations!
 
-**Remember: With great power comes great responsibility. Use Happy Frog wisely and ethically! 🐸** 
+You've successfully learned how to:
+- ✅ Install and use Happy Frog
+- ✅ Write and validate Happy Frog Scripts
+- ✅ Generate device-specific code
+- ✅ Set up microcontrollers safely
+- ✅ Use advanced features like production mode
+- ✅ Access sample payloads and examples
+
+**Remember:** With great power comes great responsibility. Use Happy Frog to learn, teach, and improve cybersecurity - always ethically and legally!
+
+---
+
+##  Support and Community
+
+- **GitHub Repository**: [https://github.com/ZeroDumb/happy-frog](https://github.com/ZeroDumb/happy-frog)
+- **Issues**: [https://github.com/ZeroDumb/happy-frog/issues](https://github.com/ZeroDumb/happy-frog/issues)
+- **Discussions**: [https://github.com/ZeroDumb/happy-frog/discussions](https://github.com/ZeroDumb/happy-frog/discussions)
+- **Documentation**: [https://github.com/ZeroDumb/happy-frog/tree/main/docs](https://github.com/ZeroDumb/happy-frog/tree/main/docs)
+
+**Happy learning! 🐸** 

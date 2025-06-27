@@ -2,6 +2,45 @@
 
 This guide covers the setup and configuration of microcontrollers for use with Happy Frog. The focus is on affordable, educational-friendly devices.
 
+## 🐸 Supported Devices
+
+Happy Frog supports multiple microcontrollers for maximum flexibility and accessibility:
+
+### Complete Device List
+
+| Device ID | Name | Type | Output Format | Status |
+|-----------|------|------|---------------|--------|
+| `xiao_rp2040` | Seeed Xiao RP2040 | CircuitPython | `.py` | ✅ **Recommended** |
+| `raspberry_pi_pico` | Raspberry Pi Pico | CircuitPython | `.py` | ✅ **Supported** |
+| `arduino_leonardo` | Arduino Leonardo | Arduino | `.ino` | ✅ **Supported** |
+| `teensy_4` | Teensy 4.0 | Arduino | `.ino` | ✅ **Supported** |
+| `digispark` | DigiSpark | Arduino | `.ino` | ✅ **Supported** |
+| `esp32` | ESP32 | CircuitPython | `.py` | ✅ **Supported** |
+| `evilcrow_cable` | EvilCrow-Cable | Arduino | `.ino` | ✅ **Supported** |
+
+### Device Categories
+
+#### 🥇 **CircuitPython Devices** (Recommended for Beginners)
+- **Seeed Xiao RP2040** - Primary recommendation
+- **Raspberry Pi Pico** - Popular alternative
+- **ESP32** - WiFi-enabled option
+
+#### 🥈 **Arduino Devices** (For Advanced Users)
+- **Arduino Leonardo** - Classic choice
+- **Teensy 4.0** - High-performance option
+- **DigiSpark** - Budget-friendly option
+- **EvilCrow-Cable** - Specialized BadUSB device
+
+### Adding New Devices
+
+If you see a microcontroller we're missing that you'd like added:
+1. **Open an issue** on GitHub with your suggestion
+2. **Include device specifications** and capabilities
+3. **Provide links** to documentation and purchase options
+4. **Explain why** it would be a good addition
+
+---
+
 ## 🎯 Recommended Hardware
 
 ### Seeed Xiao RP2040 (Primary Recommendation)

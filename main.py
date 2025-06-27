@@ -16,16 +16,25 @@ import argparse
 import sys
 import os
 from pathlib import Path
+import shutil
+import importlib.resources as pkg_resources
 
 # Import our modules directly since we're in the root directory
 from happy_frog_parser import HappyFrogParser, CircuitPythonEncoder, HappyFrogScriptError, EncoderError
 from ducky_converter import DuckyConverter
 from devices.device_manager import DeviceManager
 
+# For compatibility with both source and installed packages
+try:
+    import payloads
+except ImportError:
+    payloads = None
+
 
 def print_welcome_banner():
     """Print the Happy Frog welcome banner with ASCII art."""
-    banner = """
+    try:
+        banner = """
     ╔═════════════════════════════════════════════════════════╗
     ║                    🐸 Happy Frog 🐸                     ║
     ║            Educational HID Emulation Framework          ║
@@ -38,7 +47,23 @@ def print_welcome_banner():
 
 ⚠️  IMPORTANT: Use only for EDUCATIONAL PURPOSES and AUTHORIZED TESTING!
 """
-    print(banner)
+        print(banner)
+    except UnicodeEncodeError:
+        # Fallback banner without Unicode characters
+        fallback_banner = """
+    +=========================================================+
+    |                    Happy Frog                           |
+    |            Educational HID Emulation Framework          |
+    +=========================================================+
+
+Educational Purpose: Learn HID emulation and cybersecurity concepts
+Simple Scripting: Easy-to-learn automation language
+Safe Testing: Built-in validation and ethical guidelines
+Open Source: Free educational tool for everyone
+
+IMPORTANT: Use only for EDUCATIONAL PURPOSES and AUTHORIZED TESTING!
+"""
+        print(fallback_banner)
 
 
 def main():
@@ -58,6 +83,8 @@ Examples:
   %(prog)s validate payloads/demo_automation.txt
   %(prog)s convert ducky_script.txt
   %(prog)s encode example_payload.txt -d xiao_rp2040 -p (production mode)
+  %(prog)s list-payloads
+  %(prog)s copy-payload example_payload.txt /path/to/destination
 
 Device Selection:
   Use --device (-d) to generate code for specific microcontrollers:
@@ -79,29 +106,57 @@ Educational Purpose:
     subparsers = parser.add_subparsers(dest='command', help='Available commands')
     
     # Parse command
-    parse_parser = subparsers.add_parser('parse', help='Parse a Happy Frog Script file')
+    parse_parser = subparsers.add_parser('parse', 
+                                       help='Parse a Happy Frog Script file',
+                                       formatter_class=argparse.RawDescriptionHelpFormatter,
+                                       description='Parse and analyze a Happy Frog Script file to show its structure and validate syntax.')
     parse_parser.add_argument('input_file', help='Input Happy Frog Script file (.txt)')
-    parse_parser.add_argument('--verbose', '-v', action='store_true', help='Verbose output')
+    parse_parser.add_argument('--verbose', '-v', action='store_true', help='Verbose output showing detailed command breakdown')
     
     # Encode command
-    encode_parser = subparsers.add_parser('encode', help='Encode a Happy Frog Script to device-specific code')
+    encode_parser = subparsers.add_parser('encode', 
+                                         help='Encode a Happy Frog Script to device-specific code',
+                                         formatter_class=argparse.RawDescriptionHelpFormatter,
+                                         description='Convert a Happy Frog Script into executable code for specific microcontrollers.')
     encode_parser.add_argument('input_file', help='Input Happy Frog Script file (.txt)')
-    encode_parser.add_argument('-o', '--output', help='Output file (.py)')
-    encode_parser.add_argument('--device', '-d', help='Target device (xiao_rp2040, raspberry_pi_pico, arduino_leonardo, teensy_4, digispark, esp32, evilcrow_cable)')
-    encode_parser.add_argument('--production', '-p', action='store_true', help='Generate production-ready code (runs immediately on boot)')
-    encode_parser.add_argument('--verbose', '-v', action='store_true', help='Verbose output')
+    encode_parser.add_argument('-o', '--output', help='Output file path (default: compiled/input_name.py)')
+    encode_parser.add_argument('--device', '-d', 
+                              help='Target device: xiao_rp2040, raspberry_pi_pico, arduino_leonardo, teensy_4, digispark, esp32, evilcrow_cable')
+    encode_parser.add_argument('--production', '-p', action='store_true', 
+                              help='Generate production-ready code (runs immediately on boot with ATTACKMODE)')
+    encode_parser.add_argument('--verbose', '-v', action='store_true', help='Verbose output showing generated code preview')
     
     # Validate command
-    validate_parser = subparsers.add_parser('validate', help='Validate a Happy Frog Script file')
+    validate_parser = subparsers.add_parser('validate', 
+                                           help='Validate a Happy Frog Script file',
+                                           formatter_class=argparse.RawDescriptionHelpFormatter,
+                                           description='Check a Happy Frog Script for syntax errors and potential issues.')
     validate_parser.add_argument('input_file', help='Input Happy Frog Script file (.txt)')
-    validate_parser.add_argument('--verbose', '-v', action='store_true', help='Verbose output')
+    validate_parser.add_argument('--verbose', '-v', action='store_true', help='Verbose output showing detailed validation results')
     
-    # Convert command (NEW)
-    convert_parser = subparsers.add_parser('convert', help='Convert Ducky Script to Happy Frog Script')
+    # Convert command
+    convert_parser = subparsers.add_parser('convert', 
+                                          help='Convert Ducky Script to Happy Frog Script',
+                                          formatter_class=argparse.RawDescriptionHelpFormatter,
+                                          description='Convert legacy Ducky Script files to modern Happy Frog Script format.')
     convert_parser.add_argument('input_file', help='Input Ducky Script file (.txt)')
     convert_parser.add_argument('-o', '--output', help='Output Happy Frog Script file (.txt)')
-    convert_parser.add_argument('--verbose', '-v', action='store_true', help='Verbose output')
+    convert_parser.add_argument('--verbose', '-v', action='store_true', help='Verbose output showing conversion details')
     
+    # List payloads command
+    list_payloads_parser = subparsers.add_parser('list-payloads',
+        help='List all available sample payloads',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description='List all .txt payloads included with Happy Frog.')
+
+    # Copy payload command
+    copy_payload_parser = subparsers.add_parser('copy-payload',
+        help='Copy a sample payload to a destination',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description='Copy a sample payload file to a specified destination path.')
+    copy_payload_parser.add_argument('payload_name', help='Name of the payload file (e.g., hello_world.txt)')
+    copy_payload_parser.add_argument('destination', help='Destination file path')
+
     # Parse arguments
     args = parser.parse_args()
     
@@ -120,6 +175,10 @@ Educational Purpose:
             return validate_command(args)
         elif args.command == 'convert':
             return convert_command(args)
+        elif args.command == 'list-payloads':
+            return list_payloads_command()
+        elif args.command == 'copy-payload':
+            return copy_payload_command(args)
         else:
             print(f"Unknown command: {args.command}")
             return 1
@@ -356,6 +415,48 @@ def convert_command(args):
         
     except Exception as e:
         print(f"❌ Conversion Error: {e}")
+        return 1
+
+
+def list_payloads_command():
+    """List all .txt payloads included in the package."""
+    try:
+        if payloads is None:
+            print("Error: Could not import payloads package.")
+            return 1
+        payload_list = [name for name in pkg_resources.contents('payloads') if name.endswith('.txt')]
+        if not payload_list:
+            print("No payloads found.")
+            return 0
+        print("Available payloads:")
+        for name in sorted(payload_list):
+            print(f"  {name}")
+        return 0
+    except Exception as e:
+        print(f"Error listing payloads: {e}")
+        return 1
+
+
+def copy_payload_command(args):
+    """Copy a payload file to the specified destination."""
+    try:
+        if payloads is None:
+            print("Error: Could not import payloads package.")
+            return 1
+        payload_name = args.payload_name
+        dest_path = args.destination
+        # Check if payload exists
+        payload_list = [name for name in pkg_resources.contents('payloads') if name.endswith('.txt')]
+        if payload_name not in payload_list:
+            print(f"Payload '{payload_name}' not found. Use 'list-payloads' to see available payloads.")
+            return 1
+        # Read the payload and write to destination
+        with pkg_resources.open_binary('payloads', payload_name) as src, open(dest_path, 'wb') as dst:
+            shutil.copyfileobj(src, dst)
+        print(f"Copied '{payload_name}' to '{dest_path}'")
+        return 0
+    except Exception as e:
+        print(f"Error copying payload: {e}")
         return 1
 
 
