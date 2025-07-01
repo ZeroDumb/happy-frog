@@ -28,6 +28,7 @@ class ESP32Encoder:
         self.device_name = "ESP32"
         self.processor = "Dual-core Xtensa LX6"
         self.framework = "Arduino (ESP32)"
+        self.production_mode = False
         
         # ESP32-specific optimizations
         self.optimizations = {
@@ -38,24 +39,43 @@ class ESP32Encoder:
             'wireless_attacks': True,  # Wireless attack scenarios
         }
     
+    def set_production_mode(self, production: bool = True):
+        """Set production mode for immediate execution on boot."""
+        self.production_mode = production
+    
     def generate_header(self, script: HappyFrogScript) -> List[str]:
         """Generate ESP32-specific header code."""
         lines = []
         
-        lines.append('/*')
-        lines.append('Happy Frog - ESP32 Generated Code')
-        lines.append('Educational HID Emulation Script')
-        lines.append('')
-        lines.append(f'Device: {self.device_name}')
-        lines.append(f'Processor: {self.processor}')
-        lines.append(f'Framework: {self.framework}')
-        lines.append('')
-        lines.append('This code was automatically generated from a Happy Frog Script.')
-        lines.append('Optimized for ESP32 with WiFi/Bluetooth capabilities.')
-        lines.append('')
-        lines.append('⚠️ IMPORTANT: Use only for educational purposes and authorized testing!')
-        lines.append('*/')
-        lines.append('')
+        if self.production_mode:
+            lines.append('/*')
+            lines.append('Happy Frog - ESP32 Production Code')
+            lines.append('HID Emulation Script - Runs immediately on boot')
+            lines.append('')
+            lines.append(f'Device: {self.device_name}')
+            lines.append(f'Processor: {self.processor}')
+            lines.append(f'Framework: {self.framework}')
+            lines.append('Mode: Production (immediate execution)')
+            lines.append('')
+            lines.append('⚠️ PRODUCTION MODE: This code runs immediately when device boots!')
+            lines.append('⚠️ Use only for authorized testing and educational purposes!')
+            lines.append('*/')
+            lines.append('')
+        else:
+            lines.append('/*')
+            lines.append('Happy Frog - ESP32 Generated Code')
+            lines.append('Educational HID Emulation Script')
+            lines.append('')
+            lines.append(f'Device: {self.device_name}')
+            lines.append(f'Processor: {self.processor}')
+            lines.append(f'Framework: {self.framework}')
+            lines.append('')
+            lines.append('This code was automatically generated from a Happy Frog Script.')
+            lines.append('Optimized for ESP32 with WiFi/Bluetooth capabilities.')
+            lines.append('')
+            lines.append('⚠️ IMPORTANT: Use only for educational purposes and authorized testing!')
+            lines.append('*/')
+            lines.append('')
         
         # ESP32-specific includes
         lines.append('#include <BleKeyboard.h>  // ESP32 Bluetooth HID')
@@ -88,17 +108,30 @@ class ESP32Encoder:
         lines.append('}')
         lines.append('')
         
-        lines.append('void loop() {')
-        lines.append('  // Main execution - runs once')
-        lines.append('  executePayload();')
-        lines.append('  ')
-        lines.append('  // ESP32: Maintain Bluetooth connection')
-        lines.append('  while(true) {')
-        lines.append('    bleKeyboard.isConnected();  // Keep connection alive')
-        lines.append('    delay(1000);')
-        lines.append('  }')
-        lines.append('}')
-        lines.append('')
+        if self.production_mode:
+            lines.append('void loop() {')
+            lines.append('  // Production mode - execute payload immediately')
+            lines.append('  executePayload();')
+            lines.append('  ')
+            lines.append('  // ESP32: Maintain Bluetooth connection for production')
+            lines.append('  while(true) {')
+            lines.append('    bleKeyboard.isConnected();  // Keep connection alive')
+            lines.append('    delay(1000);')
+            lines.append('  }')
+            lines.append('}')
+            lines.append('')
+        else:
+            lines.append('void loop() {')
+            lines.append('  // Educational mode - main execution - runs once')
+            lines.append('  executePayload();')
+            lines.append('  ')
+            lines.append('  // ESP32: Maintain Bluetooth connection')
+            lines.append('  while(true) {')
+            lines.append('    bleKeyboard.isConnected();  // Keep connection alive')
+            lines.append('    delay(1000);')
+            lines.append('  }')
+            lines.append('}')
+            lines.append('')
         
         lines.append('void executePayload() {')
         lines.append('  // Generated Happy Frog payload for ESP32')
@@ -114,13 +147,22 @@ class ESP32Encoder:
         lines.append('}')
         lines.append('')
         lines.append('/*')
-        lines.append('End of Happy Frog Generated Code for ESP32')
-        lines.append('')
-        lines.append('Educational Notes:')
-        lines.append('- ESP32 provides wireless HID emulation capabilities')
-        lines.append('- Dual-core processor enables complex automation scenarios')
-        lines.append('- WiFi and Bluetooth support IoT security research')
-        lines.append('- Ideal for wireless attack demonstrations and education')
+        if self.production_mode:
+            lines.append('End of Happy Frog Production Code for ESP32')
+            lines.append('')
+            lines.append('Production Notes:')
+            lines.append('- This code runs immediately on device boot')
+            lines.append('- Optimized for wireless HID emulation')
+            lines.append('- Dual-core processor enables complex automation')
+            lines.append('- WiFi and Bluetooth support IoT security research')
+        else:
+            lines.append('End of Happy Frog Generated Code for ESP32')
+            lines.append('')
+            lines.append('Educational Notes:')
+            lines.append('- ESP32 provides wireless HID emulation capabilities')
+            lines.append('- Dual-core processor enables complex automation scenarios')
+            lines.append('- WiFi and Bluetooth support IoT security research')
+            lines.append('- Ideal for wireless attack demonstrations and education')
         lines.append('')
         lines.append('For more information, visit: https://github.com/ZeroDumb/happy-frog')
         lines.append('*/')
@@ -135,6 +177,31 @@ class ESP32Encoder:
         comment = f"  // ESP32 Command: {command.raw_text}"
         lines.append(comment)
         
+        # Handle comment lines (lines starting with #)
+        if command.raw_text.strip().startswith('#'):
+            # Skip comment lines - they're already handled by the comment above
+            return lines
+        
+        # Handle ATTACKMODE command (BadUSB attack mode configuration)
+        if command.command_type == CommandType.ATTACKMODE:
+            if command.parameters:
+                mode_config = ' '.join(command.parameters).upper()
+                if 'HID' in mode_config:
+                    lines.append(f"  // ATTACKMODE: Configured for HID emulation ({mode_config})")
+                    lines.append(f"  // Note: This device is configured as a HID keyboard/mouse")
+                    lines.append(f"  // Configuration: {mode_config}")
+                elif 'STORAGE' in mode_config:
+                    lines.append(f"  // ATTACKMODE: Configured for storage emulation ({mode_config})")
+                    lines.append(f"  // Note: This device is configured as a storage device")
+                    lines.append(f"  // Configuration: {mode_config}")
+                else:
+                    lines.append(f"  // ATTACKMODE: Configured with '{mode_config}'")
+                    lines.append(f"  // Note: This is a BadUSB attack mode configuration")
+                    lines.append(f"  // Configuration: {mode_config}")
+            else:
+                lines.append(f"  // ATTACKMODE: BadUSB attack mode configuration")
+            return lines
+        
         # Encode based on command type with ESP32 optimizations
         if command.command_type == CommandType.DELAY:
             lines.extend(self._encode_delay_esp32(command))
@@ -144,6 +211,30 @@ class ESP32Encoder:
             lines.extend(self._encode_modifier_combo_esp32(command))
         elif command.command_type == CommandType.RANDOM_DELAY:
             lines.extend(self._encode_random_delay_esp32(command))
+        elif command.command_type == CommandType.REPEAT:
+            lines.extend(self._encode_repeat_esp32(command))
+        elif command.command_type in [CommandType.DEFAULT_DELAY, CommandType.DEFAULTDELAY]:
+            lines.extend(self._encode_default_delay_esp32(command))
+        elif command.command_type == CommandType.IF:
+            lines.extend(self._encode_if_esp32(command))
+        elif command.command_type == CommandType.ELSE:
+            lines.extend(self._encode_else_esp32(command))
+        elif command.command_type == CommandType.ENDIF:
+            lines.extend(self._encode_endif_esp32(command))
+        elif command.command_type == CommandType.WHILE:
+            lines.extend(self._encode_while_esp32(command))
+        elif command.command_type == CommandType.ENDWHILE:
+            lines.extend(self._encode_endwhile_esp32(command))
+        elif command.command_type == CommandType.LOG:
+            lines.extend(self._encode_log_esp32(command))
+        elif command.command_type == CommandType.VALIDATE:
+            lines.extend(self._encode_validate_esp32(command))
+        elif command.command_type == CommandType.SAFE_MODE:
+            lines.extend(self._encode_safe_mode_esp32(command))
+        elif command.command_type == CommandType.PAUSE:
+            lines.extend(self._encode_pause_esp32(command))
+        elif command.command_type in [CommandType.COMMENT, CommandType.REM]:
+            lines.extend(self._encode_comment_esp32(command))
         else:
             # Use standard encoding for other commands
             lines.extend(self._encode_standard_command_esp32(command))
@@ -220,6 +311,145 @@ class ESP32Encoder:
         except ValueError:
             return ["  // ERROR: Invalid random delay values"]
     
+    def _encode_repeat_esp32(self, command: HappyFrogCommand) -> List[str]:
+        """Encode REPEAT command for ESP32."""
+        if not command.parameters:
+            return ["  // ERROR: REPEAT command missing count"]
+        
+        try:
+            repeat_count = int(command.parameters[0])
+            
+            return [
+                f"  // REPEAT: Repeat last command {repeat_count} times",
+                f"  // Note: ESP32 optimized repeat functionality",
+                f"  for (int i = 0; i < {repeat_count}; i++) {{",
+                f"    // Placeholder for repeated command",
+                f"  }}"
+            ]
+            
+        except ValueError:
+            return ["  // ERROR: Invalid repeat count"]
+    
+    def _encode_default_delay_esp32(self, command: HappyFrogCommand) -> List[str]:
+        """Encode DEFAULT_DELAY command for ESP32."""
+        if not command.parameters:
+            return ["  // ERROR: DEFAULT_DELAY command missing value"]
+        
+        try:
+            delay_ms = int(command.parameters[0])
+            
+            return [
+                f"  // DEFAULT_DELAY: Set default delay to {delay_ms}ms between commands",
+                f"  int default_delay = {delay_ms};  // Default delay in milliseconds"
+            ]
+            
+        except ValueError:
+            return ["  // ERROR: Invalid default delay value"]
+    
+    def _encode_if_esp32(self, command: HappyFrogCommand) -> List[str]:
+        """Encode IF command for ESP32."""
+        if not command.parameters:
+            return ["  // ERROR: IF command missing condition"]
+        
+        condition = command.parameters[0]
+        
+        return [
+            f"  // IF: Conditional execution based on '{condition}'",
+            f"  // Note: This is a simplified condition check for ESP32",
+            f"  if (true) {{  // Placeholder for condition: {condition}"
+        ]
+    
+    def _encode_else_esp32(self, command: HappyFrogCommand) -> List[str]:
+        """Encode ELSE command for ESP32."""
+        return [
+            "  // ELSE: Alternative execution path",
+            "  } else {"
+        ]
+    
+    def _encode_endif_esp32(self, command: HappyFrogCommand) -> List[str]:
+        """Encode ENDIF command for ESP32."""
+        return [
+            "  // ENDIF: End conditional block",
+            "  }"
+        ]
+    
+    def _encode_while_esp32(self, command: HappyFrogCommand) -> List[str]:
+        """Encode WHILE command for ESP32."""
+        if not command.parameters:
+            return ["  // ERROR: WHILE command missing condition"]
+        
+        condition = command.parameters[0]
+        
+        return [
+            f"  // WHILE: Loop execution based on '{condition}'",
+            f"  // Note: This is a simplified loop condition for ESP32",
+            f"  while (true) {{  // Placeholder for condition: {condition}"
+        ]
+    
+    def _encode_endwhile_esp32(self, command: HappyFrogCommand) -> List[str]:
+        """Encode ENDWHILE command for ESP32."""
+        return [
+            "  // ENDWHILE: End loop block",
+            "  }"
+        ]
+    
+    def _encode_log_esp32(self, command: HappyFrogCommand) -> List[str]:
+        """Encode LOG command for ESP32."""
+        if not command.parameters:
+            return ["  // ERROR: LOG command missing message"]
+        
+        message = command.parameters[0]
+        
+        return [
+            f"  // LOG: {message}",
+            f"  Serial.println(\"ESP32 Log: {message}\");"
+        ]
+    
+    def _encode_validate_esp32(self, command: HappyFrogCommand) -> List[str]:
+        """Encode VALIDATE command for ESP32."""
+        if not command.parameters:
+            return ["  // ERROR: VALIDATE command missing condition"]
+        
+        condition = command.parameters[0]
+        
+        return [
+            f"  // VALIDATE: Check environment condition '{condition}'",
+            f"  // Note: This is a placeholder for environment validation on ESP32",
+            f"  Serial.println(\"ESP32 Validating: {condition}\");"
+        ]
+    
+    def _encode_safe_mode_esp32(self, command: HappyFrogCommand) -> List[str]:
+        """Encode SAFE_MODE command for ESP32."""
+        if not command.parameters:
+            return ["  // ERROR: SAFE_MODE command missing ON/OFF value"]
+        
+        mode = command.parameters[0].upper()
+        
+        if mode not in ['ON', 'OFF']:
+            return ["  // ERROR: SAFE_MODE must be ON or OFF"]
+        
+        return [
+            f"  // SAFE_MODE: {'Enabled' if mode == 'ON' else 'Disabled'} safe mode restrictions",
+            f"  bool safe_mode = {str(mode == 'ON').lower()};"
+        ]
+    
+    def _encode_pause_esp32(self, command: HappyFrogCommand) -> List[str]:
+        """Encode PAUSE command for ESP32."""
+        return [
+            "  // PAUSE: Waiting for user input (press any key to continue)",
+            "  // Note: In ESP32, we'll use a long delay as a simple pause",
+            "  // For more sophisticated pause functionality, consider using WiFi/Bluetooth input",
+            "  delay(5000);  // Pause for 5 seconds (Ducky Script PAUSE equivalent)"
+        ]
+    
+    def _encode_comment_esp32(self, command: HappyFrogCommand) -> List[str]:
+        """Encode comment command for ESP32."""
+        comment_text = command.parameters[0] if command.parameters else ""
+        
+        return [
+            f"  // {comment_text}"
+        ]
+    
     def _encode_standard_command_esp32(self, command: HappyFrogCommand) -> List[str]:
         """Encode standard commands for ESP32."""
         key_code = self._get_esp32_keycode(command.command_type.value)
@@ -295,5 +525,45 @@ class ESP32Encoder:
                 'Upload code to device',
                 'Connect via Bluetooth',
                 'Test in controlled environment'
-            ]
-        } 
+            ],
+            'notes': 'Generates Arduino code for ESP32. Upload output to device using Arduino IDE with ESP32 board support. Requires Bluetooth connection to target device.'
+        }
+    
+    def _generate_main_code(self, script: HappyFrogScript) -> List[str]:
+        """Generate the main execution code with ATTACKMODE detection."""
+        lines = []
+        
+        # Check if ATTACKMODE HID STORAGE is present for immediate execution
+        has_attackmode = any(
+            cmd.command_type == CommandType.ATTACKMODE and 
+            cmd.parameters and 
+            'HID' in ' '.join(cmd.parameters).upper()
+            for cmd in script.commands
+        )
+        
+        if self.production_mode:
+            if has_attackmode:
+                lines.append("  // Production code - executes immediately on device boot/plug-in")
+                lines.append("  // ATTACKMODE HID STORAGE detected - running payload automatically")
+                lines.append("")
+                lines.append("  // Wait for system to recognize the device")
+                lines.append("  delay(2000);")
+                lines.append("")
+            else:
+                lines.append("  // Production code - main execution function")
+                lines.append("  // Wait for system to recognize the device")
+                lines.append("  delay(2000);")
+                lines.append("")
+        else:
+            # Educational mode - always use main() function
+            lines.append("  // Main execution loop")
+            lines.append("  // Wait for system to recognize the device")
+            lines.append("  delay(2000);")
+            lines.append("")
+        
+        # Process each command
+        for i, command in enumerate(script.commands):
+            lines.extend(self.encode_command(command))
+            lines.append("")  # Add blank line for readability
+        
+        return lines 

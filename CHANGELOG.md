@@ -5,9 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.2.7] - 2025-01-XX
 
 ### Added
+- **Android Device support** with mobile-specific automation commands:
+  - `ANDROID_HOME` - Navigate to home screen
+  - `ANDROID_BACK` - Navigate back
+  - `ANDROID_MENU` - Open context menu
+  - `ANDROID_APP_SWITCH` - Switch between recent apps
+  - `ANDROID_NOTIFICATIONS` - Open notifications panel
+  - `ANDROID_QUICK_SETTINGS` - Open quick settings
+  - `ANDROID_SCREENSHOT` - Take screenshot
+  - `ANDROID_VOLUME_UP/DOWN` - Volume controls
+  - `ANDROID_MUTE` - Mute audio
+  - `ANDROID_POWER` - Power button
+  - `ANDROID_OPEN_APP <name>` - Open specific app
+  - `ANDROID_CLOSE_APP` - Close current app
+  - `ANDROID_CLEAR_RECENTS` - Clear recent apps
+  - `ANDROID_GOOGLE_ASSISTANT` - Activate Google Assistant
+  - `ANDROID_SPLIT_SCREEN` - Enable split screen
+  - `ANDROID_PIP_MODE` - Picture-in-picture mode
+  - `ANDROID_ACCESSIBILITY` - Accessibility menu
+  - `ANDROID_DEVELOPER_OPTIONS` - Developer options access
+- **EvilCrow-Cable specialty commands** for advanced BadUSB operations:
+  - `RELEASE` - Release all pressed keys
+  - `WIFI_SEND <data>` - Send data over WiFi serial
+  - `WIFI_CONNECT <ssid> <password>` - Connect to WiFi network
+  - `SHELLWIN <ip>` - Trigger Windows remote shell
+  - `SHELLNIX <ip>` - Trigger Linux remote shell
+  - `SHELLMAC <ip>` - Trigger macOS remote shell
+- **Enhanced parser support** for EvilCrow-Cable specific commands
+- **Production-ready encoders** for all major devices:
+  - Teensy 4.0 - High-performance ARM Cortex-M7 optimization
+  - Arduino Leonardo - Native USB HID with ATmega32u4
+  - DigiSpark - Ultra-compact ATtiny85 with stealth capabilities
+  - ESP32 - Bluetooth HID with WiFi and web server support
+  - EvilCrow-Cable - WiFi-enabled BadUSB with specialty commands
+- **ATTACKMODE detection** with WiFi support across all devices
 - **New CLI commands** for payload management:
   - `list-payloads` - List all available sample payloads
   - `copy-payload <name> <destination>` - Copy sample payloads to user directory
@@ -16,6 +50,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Comprehensive device support documentation** in microcontrollers.md
 
 ### Changed
+- **Production mode optimization** - All devices now generate production-ready code with `--production` or `-p` flag
+- **Device encoder architecture** - Unified production/educational mode support across all encoders
+- **EvilCrow-Cable integration** - Fully integrated with CLI and device manager
+- **Parser extensibility** - Enhanced to support device-specific specialty commands
 - **Documentation consolidation** - Merged multiple overlapping documents:
   - Merged `HELLO_HAPPY_FROG.md` into `usage.md` for comprehensive user guide
   - Merged `How_We_Are_Different.md` into `README.md` for project differentiation
@@ -26,6 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Enhanced device documentation** - Complete device list with categories and status
 
 ### Fixed
+- **Device manager integration** - Fixed EvilCrow-Cable import and registration issues
+- **Backward compatibility** - Ensured all existing devices continue to work with new parser features
 - **CLI help display issues** - Fixed incomplete help output for subcommands
 - **Unicode encoding errors** - Added graceful fallback for terminal compatibility
 - **Documentation inconsistencies** - Standardized CLI examples and device names
@@ -106,6 +146,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
+- **0.2.7**: Production Ready: All devices production-ready, EvilCrow-Cable specialty commands, enhanced parser
 - **0.2.6**: Bleeding Edge: enhanced CLI, device-specific encoders, payload list/download 
 - **0.2.4**: Stable: Production packaging, ATTACKMODE support
 - **0.1.0**: Initial release with core functionality

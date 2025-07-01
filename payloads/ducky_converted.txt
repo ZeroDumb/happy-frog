@@ -1,5 +1,5 @@
 # Happy Frog Script - Converted from Ducky Script
-# Original source: ducky.txt
+# Original source: payloads/ducky.txt
 # Educational conversion - review all commands before execution
 
 # BadUSB Demo: Open Terminal, Notepad, and type a message

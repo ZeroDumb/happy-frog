@@ -81,6 +81,35 @@ class CommandType(Enum):
     # BadUSB compatibility commands
     ATTACKMODE = "ATTACKMODE"  # BadUSB attack mode configuration
     
+    # EvilCrow-Cable specialty commands
+    RELEASE = "RELEASE"  # Release all pressed keys
+    WIFI_SEND = "WIFI_SEND"  # Send data over WiFi serial
+    WIFI_CONNECT = "WIFI_CONNECT"  # Connect to WiFi network
+    SHELLWIN = "SHELLWIN"  # Trigger Windows remote shell
+    SHELLNIX = "SHELLNIX"  # Trigger Linux remote shell
+    SHELLMAC = "SHELLMAC"  # Trigger macOS remote shell
+    
+    # Android-specific commands
+    ANDROID_HOME = "ANDROID_HOME"  # Android home button
+    ANDROID_BACK = "ANDROID_BACK"  # Android back button
+    ANDROID_MENU = "ANDROID_MENU"  # Android menu button
+    ANDROID_APP_SWITCH = "ANDROID_APP_SWITCH"  # Android app switcher
+    ANDROID_NOTIFICATIONS = "ANDROID_NOTIFICATIONS"  # Android notifications panel
+    ANDROID_QUICK_SETTINGS = "ANDROID_QUICK_SETTINGS"  # Android quick settings
+    ANDROID_SCREENSHOT = "ANDROID_SCREENSHOT"  # Android screenshot
+    ANDROID_VOLUME_UP = "ANDROID_VOLUME_UP"  # Android volume up
+    ANDROID_VOLUME_DOWN = "ANDROID_VOLUME_DOWN"  # Android volume down
+    ANDROID_MUTE = "ANDROID_MUTE"  # Android mute
+    ANDROID_POWER = "ANDROID_POWER"  # Android power button
+    ANDROID_OPEN_APP = "ANDROID_OPEN_APP"  # Android open app
+    ANDROID_CLOSE_APP = "ANDROID_CLOSE_APP"  # Android close app
+    ANDROID_CLEAR_RECENTS = "ANDROID_CLEAR_RECENTS"  # Android clear recent apps
+    ANDROID_GOOGLE_ASSISTANT = "ANDROID_GOOGLE_ASSISTANT"  # Android Google Assistant
+    ANDROID_SPLIT_SCREEN = "ANDROID_SPLIT_SCREEN"  # Android split screen
+    ANDROID_PIP_MODE = "ANDROID_PIP_MODE"  # Android picture-in-picture
+    ANDROID_ACCESSIBILITY = "ANDROID_ACCESSIBILITY"  # Android accessibility
+    ANDROID_DEVELOPER_OPTIONS = "ANDROID_DEVELOPER_OPTIONS"  # Android developer options
+    
     COMMENT = "COMMENT"
     REM = "REM"  # Alternative comment syntax
 
@@ -193,6 +222,35 @@ class HappyFrogParser:
             
             # BadUSB compatibility commands
             CommandType.ATTACKMODE: re.compile(r'^ATTACKMODE\s+(.+)$', re.IGNORECASE),  # ATTACKMODE configuration
+            
+            # EvilCrow-Cable specialty commands
+            CommandType.RELEASE: re.compile(r'^RELEASE$', re.IGNORECASE),  # RELEASE all keys
+            CommandType.WIFI_SEND: re.compile(r'^WIFI_SEND\s+(.+)$', re.IGNORECASE),  # WIFI_SEND data
+            CommandType.WIFI_CONNECT: re.compile(r'^WIFI_CONNECT\s+(\S+)\s+(\S+)$', re.IGNORECASE),  # WIFI_CONNECT ssid password
+            CommandType.SHELLWIN: re.compile(r'^SHELLWIN\s+(\S+)$', re.IGNORECASE),  # SHELLWIN ip
+            CommandType.SHELLNIX: re.compile(r'^SHELLNIX\s+(\S+)$', re.IGNORECASE),  # SHELLNIX ip
+            CommandType.SHELLMAC: re.compile(r'^SHELLMAC\s+(\S+)$', re.IGNORECASE),  # SHELLMAC ip
+            
+            # Android-specific commands
+            CommandType.ANDROID_HOME: re.compile(r'^ANDROID_HOME$', re.IGNORECASE),  # ANDROID_HOME
+            CommandType.ANDROID_BACK: re.compile(r'^ANDROID_BACK$', re.IGNORECASE),  # ANDROID_BACK
+            CommandType.ANDROID_MENU: re.compile(r'^ANDROID_MENU$', re.IGNORECASE),  # ANDROID_MENU
+            CommandType.ANDROID_APP_SWITCH: re.compile(r'^ANDROID_APP_SWITCH$', re.IGNORECASE),  # ANDROID_APP_SWITCH
+            CommandType.ANDROID_NOTIFICATIONS: re.compile(r'^ANDROID_NOTIFICATIONS$', re.IGNORECASE),  # ANDROID_NOTIFICATIONS
+            CommandType.ANDROID_QUICK_SETTINGS: re.compile(r'^ANDROID_QUICK_SETTINGS$', re.IGNORECASE),  # ANDROID_QUICK_SETTINGS
+            CommandType.ANDROID_SCREENSHOT: re.compile(r'^ANDROID_SCREENSHOT$', re.IGNORECASE),  # ANDROID_SCREENSHOT
+            CommandType.ANDROID_VOLUME_UP: re.compile(r'^ANDROID_VOLUME_UP$', re.IGNORECASE),  # ANDROID_VOLUME_UP
+            CommandType.ANDROID_VOLUME_DOWN: re.compile(r'^ANDROID_VOLUME_DOWN$', re.IGNORECASE),  # ANDROID_VOLUME_DOWN
+            CommandType.ANDROID_MUTE: re.compile(r'^ANDROID_MUTE$', re.IGNORECASE),  # ANDROID_MUTE
+            CommandType.ANDROID_POWER: re.compile(r'^ANDROID_POWER$', re.IGNORECASE),  # ANDROID_POWER
+            CommandType.ANDROID_OPEN_APP: re.compile(r'^ANDROID_OPEN_APP\s+(.+)$', re.IGNORECASE),  # ANDROID_OPEN_APP app_name
+            CommandType.ANDROID_CLOSE_APP: re.compile(r'^ANDROID_CLOSE_APP$', re.IGNORECASE),  # ANDROID_CLOSE_APP
+            CommandType.ANDROID_CLEAR_RECENTS: re.compile(r'^ANDROID_CLEAR_RECENTS$', re.IGNORECASE),  # ANDROID_CLEAR_RECENTS
+            CommandType.ANDROID_GOOGLE_ASSISTANT: re.compile(r'^ANDROID_GOOGLE_ASSISTANT$', re.IGNORECASE),  # ANDROID_GOOGLE_ASSISTANT
+            CommandType.ANDROID_SPLIT_SCREEN: re.compile(r'^ANDROID_SPLIT_SCREEN$', re.IGNORECASE),  # ANDROID_SPLIT_SCREEN
+            CommandType.ANDROID_PIP_MODE: re.compile(r'^ANDROID_PIP_MODE$', re.IGNORECASE),  # ANDROID_PIP_MODE
+            CommandType.ANDROID_ACCESSIBILITY: re.compile(r'^ANDROID_ACCESSIBILITY$', re.IGNORECASE),  # ANDROID_ACCESSIBILITY
+            CommandType.ANDROID_DEVELOPER_OPTIONS: re.compile(r'^ANDROID_DEVELOPER_OPTIONS$', re.IGNORECASE),  # ANDROID_DEVELOPER_OPTIONS
             
             # Comments
             CommandType.COMMENT: re.compile(r'^#(.*)$', re.IGNORECASE),
@@ -355,6 +413,40 @@ class HappyFrogParser:
         elif command_type == CommandType.ATTACKMODE:
             # ATTACKMODE command captures the configuration
             parameters = [match.group(1)]
+            
+        # EvilCrow-Cable specialty commands
+        elif command_type == CommandType.RELEASE:
+            # RELEASE command has no parameters
+            parameters = []
+            
+        elif command_type == CommandType.WIFI_SEND:
+            # WIFI_SEND command captures the data to send
+            parameters = [match.group(1)]
+            
+        elif command_type == CommandType.WIFI_CONNECT:
+            # WIFI_CONNECT command captures SSID and password
+            parameters = [match.group(1), match.group(2)]
+            
+        elif command_type in [CommandType.SHELLWIN, CommandType.SHELLNIX, CommandType.SHELLMAC]:
+            # Shell commands capture the IP address
+            parameters = [match.group(1)]
+            
+        # Android-specific commands
+        elif command_type == CommandType.ANDROID_OPEN_APP:
+            # ANDROID_OPEN_APP command captures the app name
+            parameters = [match.group(1)]
+            
+        elif command_type in [CommandType.ANDROID_HOME, CommandType.ANDROID_BACK, CommandType.ANDROID_MENU,
+                             CommandType.ANDROID_APP_SWITCH, CommandType.ANDROID_NOTIFICATIONS,
+                             CommandType.ANDROID_QUICK_SETTINGS, CommandType.ANDROID_SCREENSHOT,
+                             CommandType.ANDROID_VOLUME_UP, CommandType.ANDROID_VOLUME_DOWN,
+                             CommandType.ANDROID_MUTE, CommandType.ANDROID_POWER,
+                             CommandType.ANDROID_CLOSE_APP, CommandType.ANDROID_CLEAR_RECENTS,
+                             CommandType.ANDROID_GOOGLE_ASSISTANT, CommandType.ANDROID_SPLIT_SCREEN,
+                             CommandType.ANDROID_PIP_MODE, CommandType.ANDROID_ACCESSIBILITY,
+                             CommandType.ANDROID_DEVELOPER_OPTIONS]:
+            # Android commands with no parameters
+            parameters = []
             
         # For all other commands, no parameters are extracted
         

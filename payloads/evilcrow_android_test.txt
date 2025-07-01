@@ -1,0 +1,44 @@
+# EvilCrow-Cable Android Attack Test
+# This payload uses EvilCrow-Cable to test Android device security
+
+# EvilCrow-Cable specific setup
+ATTACKMODE HID STORAGE
+DELAY 2000
+
+# Android navigation test
+ANDROID_HOME
+DELAY 1000
+STRING EvilCrow-Cable Android Test
+DELAY 500
+ENTER
+DELAY 1000
+
+# Android system controls
+ANDROID_VOLUME_UP
+DELAY 200
+ANDROID_VOLUME_DOWN
+DELAY 200
+
+# Android app management
+ANDROID_OPEN_APP Settings
+DELAY 2000
+ANDROID_BACK
+DELAY 500
+
+# Android notifications
+ANDROID_NOTIFICATIONS
+DELAY 1000
+ANDROID_BACK
+DELAY 500
+
+# Android screenshot
+ANDROID_SCREENSHOT
+DELAY 1000
+
+# Return to home
+ANDROID_HOME
+DELAY 500
+STRING EvilCrow-Cable test completed!
+DELAY 500
+ENTER
+DELAY 1000 

@@ -259,6 +259,18 @@ class CircuitPythonEncoder:
             lines.extend(self._encode_safe_mode(command))
         elif command.command_type == CommandType.ATTACKMODE:
             lines.extend(self._encode_attackmode(command))
+        elif command.command_type == CommandType.RELEASE:
+            lines.extend(self._encode_release(command))
+        elif command.command_type == CommandType.WIFI_SEND:
+            lines.extend(self._encode_wifi_send(command))
+        elif command.command_type == CommandType.WIFI_CONNECT:
+            lines.extend(self._encode_wifi_connect(command))
+        elif command.command_type == CommandType.SHELLWIN:
+            lines.extend(self._encode_shellwin(command))
+        elif command.command_type == CommandType.SHELLNIX:
+            lines.extend(self._encode_shellnix(command))
+        elif command.command_type == CommandType.SHELLMAC:
+            lines.extend(self._encode_shellmac(command))
         elif command.command_type in self.key_codes:
             lines.extend(self._encode_key_press(command))
         elif command.command_type in [CommandType.COMMENT, CommandType.REM]:
@@ -774,4 +786,112 @@ Generated from Happy Frog Script
                 f"    # ATTACKMODE: Configured with '{mode_config}'",
                 f"    # Note: This is a BadUSB attack mode configuration",
                 f"    # Configuration: {mode_config}"
-            ] 
+            ]
+    
+    def _encode_release(self, command: HappyFrogCommand) -> List[str]:
+        """Encode a RELEASE command - release all pressed keys."""
+        indent = "    " if self.safe_mode else ""
+        if self.safe_mode:
+            return [
+                f"{indent}kbd.release_all()  # Release all pressed keys"
+            ]
+        else:
+            return [
+                f"{indent}kbd.release_all()  # Release all keys"
+            ]
+    
+    def _encode_wifi_send(self, command: HappyFrogCommand) -> List[str]:
+        """Encode a WIFI_SEND command - send data over WiFi serial."""
+        if not command.parameters:
+            raise EncoderError(f"WIFI_SEND command missing data: {command.raw_text}")
+        
+        data = command.parameters[0]
+        indent = "    " if self.safe_mode else ""
+        if self.safe_mode:
+            return [
+                f"{indent}# WIFI_SEND: Send data over WiFi serial",
+                f"{indent}# Note: This requires WiFi module setup and serial communication",
+                f"{indent}print('WiFi Send: {data}')  # Placeholder for WiFi send"
+            ]
+        else:
+            return [
+                f"{indent}# WIFI_SEND: Send data over WiFi serial",
+                f"{indent}print('WiFi Send: {data}')  # Placeholder for WiFi send"
+            ]
+    
+    def _encode_wifi_connect(self, command: HappyFrogCommand) -> List[str]:
+        """Encode a WIFI_CONNECT command - connect to WiFi network."""
+        if len(command.parameters) < 2:
+            raise EncoderError(f"WIFI_CONNECT command missing SSID or password: {command.raw_text}")
+        
+        ssid = command.parameters[0]
+        password = command.parameters[1]
+        indent = "    " if self.safe_mode else ""
+        if self.safe_mode:
+            return [
+                f"{indent}# WIFI_CONNECT: Connect to WiFi network",
+                f"{indent}# Note: This requires WiFi module setup and network configuration",
+                f"{indent}print('WiFi Connect: {ssid}')  # Placeholder for WiFi connect"
+            ]
+        else:
+            return [
+                f"{indent}# WIFI_CONNECT: Connect to WiFi network",
+                f"{indent}print('WiFi Connect: {ssid}')  # Placeholder for WiFi connect"
+            ]
+    
+    def _encode_shellwin(self, command: HappyFrogCommand) -> List[str]:
+        """Encode a SHELLWIN command - trigger Windows remote shell."""
+        if not command.parameters:
+            raise EncoderError(f"SHELLWIN command missing IP address: {command.raw_text}")
+        
+        ip_address = command.parameters[0]
+        indent = "    " if self.safe_mode else ""
+        if self.safe_mode:
+            return [
+                f"{indent}# SHELLWIN: Trigger Windows remote shell",
+                f"{indent}# Note: This requires EvilCrow-Cable with remote shell capability",
+                f"{indent}print('ShellWin: {ip_address}')  # Placeholder for Windows shell"
+            ]
+        else:
+            return [
+                f"{indent}# SHELLWIN: Trigger Windows remote shell",
+                f"{indent}print('ShellWin: {ip_address}')  # Placeholder for Windows shell"
+            ]
+    
+    def _encode_shellnix(self, command: HappyFrogCommand) -> List[str]:
+        """Encode a SHELLNIX command - trigger Linux remote shell."""
+        if not command.parameters:
+            raise EncoderError(f"SHELLNIX command missing IP address: {command.raw_text}")
+        
+        ip_address = command.parameters[0]
+        indent = "    " if self.safe_mode else ""
+        if self.safe_mode:
+            return [
+                f"{indent}# SHELLNIX: Trigger Linux remote shell",
+                f"{indent}# Note: This requires EvilCrow-Cable with remote shell capability",
+                f"{indent}print('ShellNix: {ip_address}')  # Placeholder for Linux shell"
+            ]
+        else:
+            return [
+                f"{indent}# SHELLNIX: Trigger Linux remote shell",
+                f"{indent}print('ShellNix: {ip_address}')  # Placeholder for Linux shell"
+            ]
+    
+    def _encode_shellmac(self, command: HappyFrogCommand) -> List[str]:
+        """Encode a SHELLMAC command - trigger macOS remote shell."""
+        if not command.parameters:
+            raise EncoderError(f"SHELLMAC command missing IP address: {command.raw_text}")
+        
+        ip_address = command.parameters[0]
+        indent = "    " if self.safe_mode else ""
+        if self.safe_mode:
+            return [
+                f"{indent}# SHELLMAC: Trigger macOS remote shell",
+                f"{indent}# Note: This requires EvilCrow-Cable with remote shell capability",
+                f"{indent}print('ShellMac: {ip_address}')  # Placeholder for macOS shell"
+            ]
+        else:
+            return [
+                f"{indent}# SHELLMAC: Trigger macOS remote shell",
+                f"{indent}print('ShellMac: {ip_address}')  # Placeholder for macOS shell"
+            ]

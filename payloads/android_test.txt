@@ -1,0 +1,78 @@
+# Android Device Test Payload
+# This payload demonstrates Android-specific automation capabilities
+# Based on Android keyboard shortcuts and navigation patterns
+
+# Android-specific setup
+ATTACKMODE ANDROID
+DELAY 2000
+
+# Basic Android navigation
+ANDROID_HOME
+DELAY 500
+STRING Hello from Android automation!
+DELAY 1000
+
+# Android system controls
+ANDROID_VOLUME_UP
+DELAY 200
+ANDROID_VOLUME_UP
+DELAY 200
+ANDROID_MUTE
+DELAY 500
+
+# Android app management
+ANDROID_OPEN_APP Settings
+DELAY 1000
+ANDROID_BACK
+DELAY 500
+ANDROID_APP_SWITCH
+DELAY 500
+ANDROID_CLOSE_APP
+DELAY 500
+
+# Android system features
+ANDROID_NOTIFICATIONS
+DELAY 1000
+ANDROID_BACK
+DELAY 500
+ANDROID_QUICK_SETTINGS
+DELAY 1000
+ANDROID_BACK
+DELAY 500
+
+# Android screenshot
+ANDROID_SCREENSHOT
+DELAY 1000
+
+# Android accessibility and developer features
+ANDROID_ACCESSIBILITY
+DELAY 1000
+ANDROID_BACK
+DELAY 500
+ANDROID_DEVELOPER_OPTIONS
+DELAY 1000
+ANDROID_BACK
+DELAY 500
+
+# Android advanced features
+ANDROID_GOOGLE_ASSISTANT
+DELAY 1000
+ANDROID_BACK
+DELAY 500
+ANDROID_SPLIT_SCREEN
+DELAY 1000
+ANDROID_BACK
+DELAY 500
+
+# Android power management
+ANDROID_POWER
+DELAY 500
+ANDROID_POWER
+DELAY 500
+
+# Final message
+ANDROID_HOME
+DELAY 500
+STRING Android automation test completed!
+DELAY 1000
+ENTER 

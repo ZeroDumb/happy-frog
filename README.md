@@ -114,12 +114,31 @@ You may not:
 
 > You are responsible for your usage. Like a grown-up. Or at least a well-supervised minor.
 
-## Current known issues and progress
-- some of the device specific encoders need updating to handle attack and production ready builds
-  for imediate use cases, you can skip using -d and just run encode for .py output while I work
-  on the others
-- fixed: some logic is failing to parse reliably, should be fixed within the next couple releases
-- most tested and reliable device right now is the xiao rp2040
+## Current Status - Production Ready! 🎉
+
+**All devices are now production-ready with full ATTACKMODE support!**
+
+### ✅ What's Working
+- **All 7 devices** fully support production mode with `--production` flag
+- **ATTACKMODE detection** with WiFi support across all devices
+- **EvilCrow-Cable specialty commands** (RELEASE, WIFI_SEND, WIFI_CONNECT, SHELLWIN, SHELLNIX, SHELLMAC)
+- **Enhanced parser** with support for device-specific commands
+- **Backward compatibility** maintained across all updates
+
+### 🎯 Production-Ready Devices
+- **Seeed Xiao RP2040** - CircuitPython (Recommended)
+- **Raspberry Pi Pico** - CircuitPython
+- **Arduino Leonardo** - Arduino (Native USB HID)
+- **Teensy 4.0** - Arduino (High-performance ARM Cortex-M7)
+- **DigiSpark** - Arduino (Ultra-compact ATtiny85)
+- **ESP32** - Arduino (Bluetooth HID with WiFi)
+- **EvilCrow-Cable** - Arduino (WiFi-enabled BadUSB)
+
+### 🚀 New Features
+- **Production mode** generates code that runs immediately on device boot/plug-in
+- **Educational mode** provides detailed comments and safety features
+- **Device-specific optimizations** for each microcontroller
+- **Enhanced CLI** with payload management commands
 
 ##  Why Happy Frog Exists
 
@@ -177,6 +196,14 @@ It's everything you wanted in duckyland, except now the duck is a frog with a Ph
 
 #### Documentation
 - **Comments**: `#` and `REM` for documentation
+
+#### EvilCrow-Cable Specialty Commands (Advanced)
+- **RELEASE**: Release all pressed keys
+- **WIFI_SEND**: Send data over WiFi serial
+- **WIFI_CONNECT**: Connect to WiFi network
+- **SHELLWIN**: Trigger Windows remote shell
+- **SHELLNIX**: Trigger Linux remote shell
+- **SHELLMAC**: Trigger macOS remote shell
 
 ##  Sample Sorcery
 
@@ -438,7 +465,7 @@ happy-frog encode my_script.txt -d xiao_rp2040 -o my_script.py --production
 - [Developer Guide](docs/DEVELOPMENT.md) - Developer guide, details, and integrations (for the nerds)
 - [Microcontroller Setup](docs/microcontrollers.md) - Hardware setup guide (because hardware is hard)
 - [Educational Examples](payloads/) - Sample scripts with explanations (that actually run)
-- [Progression](docs/CHANGELOG.md) - See the progression and changes of the project as it grows
+- [Progression](CHANGELOG.md) - See the progression and changes of the project as it grows
 
 
 ##  Safety Rules

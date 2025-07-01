@@ -28,6 +28,7 @@ class DigiSparkEncoder:
         self.device_name = "DigiSpark"
         self.processor = "ATtiny85"
         self.framework = "Arduino (DigiSpark)"
+        self.production_mode = False
         
         # DigiSpark-specific optimizations
         self.optimizations = {
@@ -38,24 +39,43 @@ class DigiSparkEncoder:
             'limited_memory': True,  # 8KB flash, 512B RAM
         }
     
+    def set_production_mode(self, production: bool = True):
+        """Set production mode for immediate execution on boot."""
+        self.production_mode = production
+    
     def generate_header(self, script: HappyFrogScript) -> List[str]:
         """Generate DigiSpark-specific header code."""
         lines = []
         
-        lines.append('/*')
-        lines.append('Happy Frog - DigiSpark Generated Code')
-        lines.append('Educational HID Emulation Script')
-        lines.append('')
-        lines.append(f'Device: {self.device_name}')
-        lines.append(f'Processor: {self.processor}')
-        lines.append(f'Framework: {self.framework}')
-        lines.append('')
-        lines.append('This code was automatically generated from a Happy Frog Script.')
-        lines.append('Optimized for DigiSpark with ATtiny85 processor.')
-        lines.append('')
-        lines.append('⚠️ IMPORTANT: Use only for educational purposes and authorized testing!')
-        lines.append('*/')
-        lines.append('')
+        if self.production_mode:
+            lines.append('/*')
+            lines.append('Happy Frog - DigiSpark Production Code')
+            lines.append('HID Emulation Script - Runs immediately on boot')
+            lines.append('')
+            lines.append(f'Device: {self.device_name}')
+            lines.append(f'Processor: {self.processor}')
+            lines.append(f'Framework: {self.framework}')
+            lines.append('Mode: Production (immediate execution)')
+            lines.append('')
+            lines.append('⚠️ PRODUCTION MODE: This code runs immediately when device boots!')
+            lines.append('⚠️ Use only for authorized testing and educational purposes!')
+            lines.append('*/')
+            lines.append('')
+        else:
+            lines.append('/*')
+            lines.append('Happy Frog - DigiSpark Generated Code')
+            lines.append('Educational HID Emulation Script')
+            lines.append('')
+            lines.append(f'Device: {self.device_name}')
+            lines.append(f'Processor: {self.processor}')
+            lines.append(f'Framework: {self.framework}')
+            lines.append('')
+            lines.append('This code was automatically generated from a Happy Frog Script.')
+            lines.append('Optimized for DigiSpark with ATtiny85 processor.')
+            lines.append('')
+            lines.append('⚠️ IMPORTANT: Use only for educational purposes and authorized testing!')
+            lines.append('*/')
+            lines.append('')
         
         # DigiSpark-specific includes
         lines.append('#include "DigiKeyboard.h"  // DigiSpark keyboard library')
@@ -71,16 +91,28 @@ class DigiSparkEncoder:
         lines.append('}')
         lines.append('')
         
-        lines.append('void loop() {')
-        lines.append('  // Main execution - runs once')
-        lines.append('  executePayload();')
-        lines.append('  ')
-        lines.append('  // DigiSpark: Minimal infinite loop')
-        lines.append('  while(true) {')
-        lines.append('    ;  // Empty loop to prevent re-execution')
-        lines.append('  }')
-        lines.append('}')
-        lines.append('')
+        if self.production_mode:
+            lines.append('void loop() {')
+            lines.append('  // Production mode - execute payload immediately')
+            lines.append('  executePayload();')
+            lines.append('  ')
+            lines.append('  // DigiSpark: Ultra-compact infinite loop for production')
+            lines.append('  while(true) {')
+            lines.append('    ;  // Empty loop to prevent re-execution')
+            lines.append('  }')
+            lines.append('}')
+            lines.append('')
+        else:
+            lines.append('void loop() {')
+            lines.append('  // Educational mode - main execution - runs once')
+            lines.append('  executePayload();')
+            lines.append('  ')
+            lines.append('  // DigiSpark: Minimal infinite loop')
+            lines.append('  while(true) {')
+            lines.append('    ;  // Empty loop to prevent re-execution')
+            lines.append('  }')
+            lines.append('}')
+            lines.append('')
         
         lines.append('void executePayload() {')
         lines.append('  // Generated Happy Frog payload for DigiSpark')
@@ -96,13 +128,22 @@ class DigiSparkEncoder:
         lines.append('}')
         lines.append('')
         lines.append('/*')
-        lines.append('End of Happy Frog Generated Code for DigiSpark')
-        lines.append('')
-        lines.append('Educational Notes:')
-        lines.append('- DigiSpark provides ultra-compact HID emulation')
-        lines.append('- ATtiny85 processor enables portable applications')
-        lines.append('- Built-in USB HID support in tiny form factor')
-        lines.append('- Ideal for educational portable payload demonstrations')
+        if self.production_mode:
+            lines.append('End of Happy Frog Production Code for DigiSpark')
+            lines.append('')
+            lines.append('Production Notes:')
+            lines.append('- This code runs immediately on device boot')
+            lines.append('- Optimized for ultra-compact HID emulation')
+            lines.append('- ATtiny85 processor enables portable applications')
+            lines.append('- Perfect for stealth and portable payload demonstrations')
+        else:
+            lines.append('End of Happy Frog Generated Code for DigiSpark')
+            lines.append('')
+            lines.append('Educational Notes:')
+            lines.append('- DigiSpark provides ultra-compact HID emulation')
+            lines.append('- ATtiny85 processor enables portable applications')
+            lines.append('- Built-in USB HID support in tiny form factor')
+            lines.append('- Ideal for educational portable payload demonstrations')
         lines.append('')
         lines.append('For more information, visit: https://github.com/ZeroDumb/happy-frog')
         lines.append('*/')
@@ -117,6 +158,31 @@ class DigiSparkEncoder:
         comment = f"  // DigiSpark Command: {command.raw_text}"
         lines.append(comment)
         
+        # Handle comment lines (lines starting with #)
+        if command.raw_text.strip().startswith('#'):
+            # Skip comment lines - they're already handled by the comment above
+            return lines
+        
+        # Handle ATTACKMODE command (BadUSB attack mode configuration)
+        if command.command_type == CommandType.ATTACKMODE:
+            if command.parameters:
+                mode_config = ' '.join(command.parameters).upper()
+                if 'HID' in mode_config:
+                    lines.append(f"  // ATTACKMODE: Configured for HID emulation ({mode_config})")
+                    lines.append(f"  // Note: This device is configured as a HID keyboard/mouse")
+                    lines.append(f"  // Configuration: {mode_config}")
+                elif 'STORAGE' in mode_config:
+                    lines.append(f"  // ATTACKMODE: Configured for storage emulation ({mode_config})")
+                    lines.append(f"  // Note: This device is configured as a storage device")
+                    lines.append(f"  // Configuration: {mode_config}")
+                else:
+                    lines.append(f"  // ATTACKMODE: Configured with '{mode_config}'")
+                    lines.append(f"  // Note: This is a BadUSB attack mode configuration")
+                    lines.append(f"  // Configuration: {mode_config}")
+            else:
+                lines.append(f"  // ATTACKMODE: BadUSB attack mode configuration")
+            return lines
+        
         # Encode based on command type with DigiSpark optimizations
         if command.command_type == CommandType.DELAY:
             lines.extend(self._encode_delay_digispark(command))
@@ -126,6 +192,30 @@ class DigiSparkEncoder:
             lines.extend(self._encode_modifier_combo_digispark(command))
         elif command.command_type == CommandType.RANDOM_DELAY:
             lines.extend(self._encode_random_delay_digispark(command))
+        elif command.command_type == CommandType.REPEAT:
+            lines.extend(self._encode_repeat_digispark(command))
+        elif command.command_type in [CommandType.DEFAULT_DELAY, CommandType.DEFAULTDELAY]:
+            lines.extend(self._encode_default_delay_digispark(command))
+        elif command.command_type == CommandType.IF:
+            lines.extend(self._encode_if_digispark(command))
+        elif command.command_type == CommandType.ELSE:
+            lines.extend(self._encode_else_digispark(command))
+        elif command.command_type == CommandType.ENDIF:
+            lines.extend(self._encode_endif_digispark(command))
+        elif command.command_type == CommandType.WHILE:
+            lines.extend(self._encode_while_digispark(command))
+        elif command.command_type == CommandType.ENDWHILE:
+            lines.extend(self._encode_endwhile_digispark(command))
+        elif command.command_type == CommandType.LOG:
+            lines.extend(self._encode_log_digispark(command))
+        elif command.command_type == CommandType.VALIDATE:
+            lines.extend(self._encode_validate_digispark(command))
+        elif command.command_type == CommandType.SAFE_MODE:
+            lines.extend(self._encode_safe_mode_digispark(command))
+        elif command.command_type == CommandType.PAUSE:
+            lines.extend(self._encode_pause_digispark(command))
+        elif command.command_type in [CommandType.COMMENT, CommandType.REM]:
+            lines.extend(self._encode_comment_digispark(command))
         else:
             # Use standard encoding for other commands
             lines.extend(self._encode_standard_command_digispark(command))
@@ -192,6 +282,145 @@ class DigiSparkEncoder:
             
         except ValueError:
             return ["  // ERROR: Invalid random delay values"]
+    
+    def _encode_repeat_digispark(self, command: HappyFrogCommand) -> List[str]:
+        """Encode REPEAT command for DigiSpark."""
+        if not command.parameters:
+            return ["  // ERROR: REPEAT command missing count"]
+        
+        try:
+            repeat_count = int(command.parameters[0])
+            
+            return [
+                f"  // REPEAT: Repeat last command {repeat_count} times",
+                f"  // Note: DigiSpark optimized repeat functionality",
+                f"  for (int i = 0; i < {repeat_count}; i++) {{",
+                f"    // Placeholder for repeated command",
+                f"  }}"
+            ]
+            
+        except ValueError:
+            return ["  // ERROR: Invalid repeat count"]
+    
+    def _encode_default_delay_digispark(self, command: HappyFrogCommand) -> List[str]:
+        """Encode DEFAULT_DELAY command for DigiSpark."""
+        if not command.parameters:
+            return ["  // ERROR: DEFAULT_DELAY command missing value"]
+        
+        try:
+            delay_ms = int(command.parameters[0])
+            
+            return [
+                f"  // DEFAULT_DELAY: Set default delay to {delay_ms}ms between commands",
+                f"  int default_delay = {delay_ms};  // Default delay in milliseconds"
+            ]
+            
+        except ValueError:
+            return ["  // ERROR: Invalid default delay value"]
+    
+    def _encode_if_digispark(self, command: HappyFrogCommand) -> List[str]:
+        """Encode IF command for DigiSpark."""
+        if not command.parameters:
+            return ["  // ERROR: IF command missing condition"]
+        
+        condition = command.parameters[0]
+        
+        return [
+            f"  // IF: Conditional execution based on '{condition}'",
+            f"  // Note: This is a simplified condition check for DigiSpark",
+            f"  if (true) {{  // Placeholder for condition: {condition}"
+        ]
+    
+    def _encode_else_digispark(self, command: HappyFrogCommand) -> List[str]:
+        """Encode ELSE command for DigiSpark."""
+        return [
+            "  // ELSE: Alternative execution path",
+            "  } else {"
+        ]
+    
+    def _encode_endif_digispark(self, command: HappyFrogCommand) -> List[str]:
+        """Encode ENDIF command for DigiSpark."""
+        return [
+            "  // ENDIF: End conditional block",
+            "  }"
+        ]
+    
+    def _encode_while_digispark(self, command: HappyFrogCommand) -> List[str]:
+        """Encode WHILE command for DigiSpark."""
+        if not command.parameters:
+            return ["  // ERROR: WHILE command missing condition"]
+        
+        condition = command.parameters[0]
+        
+        return [
+            f"  // WHILE: Loop execution based on '{condition}'",
+            f"  // Note: This is a simplified loop condition for DigiSpark",
+            f"  while (true) {{  // Placeholder for condition: {condition}"
+        ]
+    
+    def _encode_endwhile_digispark(self, command: HappyFrogCommand) -> List[str]:
+        """Encode ENDWHILE command for DigiSpark."""
+        return [
+            "  // ENDWHILE: End loop block",
+            "  }"
+        ]
+    
+    def _encode_log_digispark(self, command: HappyFrogCommand) -> List[str]:
+        """Encode LOG command for DigiSpark."""
+        if not command.parameters:
+            return ["  // ERROR: LOG command missing message"]
+        
+        message = command.parameters[0]
+        
+        return [
+            f"  // LOG: {message}",
+            f"  // Note: DigiSpark has limited serial output capabilities"
+        ]
+    
+    def _encode_validate_digispark(self, command: HappyFrogCommand) -> List[str]:
+        """Encode VALIDATE command for DigiSpark."""
+        if not command.parameters:
+            return ["  // ERROR: VALIDATE command missing condition"]
+        
+        condition = command.parameters[0]
+        
+        return [
+            f"  // VALIDATE: Check environment condition '{condition}'",
+            f"  // Note: This is a placeholder for environment validation on DigiSpark",
+            f"  // DigiSpark has limited validation capabilities due to memory constraints"
+        ]
+    
+    def _encode_safe_mode_digispark(self, command: HappyFrogCommand) -> List[str]:
+        """Encode SAFE_MODE command for DigiSpark."""
+        if not command.parameters:
+            return ["  // ERROR: SAFE_MODE command missing ON/OFF value"]
+        
+        mode = command.parameters[0].upper()
+        
+        if mode not in ['ON', 'OFF']:
+            return ["  // ERROR: SAFE_MODE must be ON or OFF"]
+        
+        return [
+            f"  // SAFE_MODE: {'Enabled' if mode == 'ON' else 'Disabled'} safe mode restrictions",
+            f"  bool safe_mode = {str(mode == 'ON').lower()};"
+        ]
+    
+    def _encode_pause_digispark(self, command: HappyFrogCommand) -> List[str]:
+        """Encode PAUSE command for DigiSpark."""
+        return [
+            "  // PAUSE: Waiting for user input (press any key to continue)",
+            "  // Note: In DigiSpark, we'll use a long delay as a simple pause",
+            "  // For more sophisticated pause functionality, consider using button input",
+            "  DigiKeyboard.delay(5000);  // Pause for 5 seconds (Ducky Script PAUSE equivalent)"
+        ]
+    
+    def _encode_comment_digispark(self, command: HappyFrogCommand) -> List[str]:
+        """Encode comment command for DigiSpark."""
+        comment_text = command.parameters[0] if command.parameters else ""
+        
+        return [
+            f"  // {comment_text}"
+        ]
     
     def _encode_standard_command_digispark(self, command: HappyFrogCommand) -> List[str]:
         """Encode standard commands for DigiSpark."""
@@ -266,5 +495,45 @@ class DigiSparkEncoder:
                 'Install DigiKeyboard library',
                 'Upload code to device',
                 'Test in controlled environment'
-            ]
-        } 
+            ],
+            'notes': 'Generates Arduino code for DigiSpark. Upload output to device using Arduino IDE with DigiSpark board support.'
+        }
+    
+    def _generate_main_code(self, script: HappyFrogScript) -> List[str]:
+        """Generate the main execution code with ATTACKMODE detection."""
+        lines = []
+        
+        # Check if ATTACKMODE HID STORAGE is present for immediate execution
+        has_attackmode = any(
+            cmd.command_type == CommandType.ATTACKMODE and 
+            cmd.parameters and 
+            'HID' in ' '.join(cmd.parameters).upper()
+            for cmd in script.commands
+        )
+        
+        if self.production_mode:
+            if has_attackmode:
+                lines.append("  // Production code - executes immediately on device boot/plug-in")
+                lines.append("  // ATTACKMODE HID STORAGE detected - running payload automatically")
+                lines.append("")
+                lines.append("  // Wait for system to recognize the device")
+                lines.append("  DigiKeyboard.delay(2000);")
+                lines.append("")
+            else:
+                lines.append("  // Production code - main execution function")
+                lines.append("  // Wait for system to recognize the device")
+                lines.append("  DigiKeyboard.delay(2000);")
+                lines.append("")
+        else:
+            # Educational mode - always use main() function
+            lines.append("  // Main execution loop")
+            lines.append("  // Wait for system to recognize the device")
+            lines.append("  DigiKeyboard.delay(2000);")
+            lines.append("")
+        
+        # Process each command
+        for i, command in enumerate(script.commands):
+            lines.extend(self.encode_command(command))
+            lines.append("")  # Add blank line for readability
+        
+        return lines 

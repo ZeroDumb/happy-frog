@@ -1,0 +1,58 @@
+# Android Mixed Commands Test
+# This payload tests Android-specific commands mixed with standard commands
+
+# Standard setup
+ATTACKMODE ANDROID
+DELAY 1000
+
+# Standard commands
+STRING Hello from mixed Android test!
+ENTER
+DELAY 500
+
+# Android-specific navigation
+ANDROID_HOME
+DELAY 500
+ANDROID_BACK
+DELAY 500
+
+# Standard modifier combos
+CTRL ALT DEL
+DELAY 1000
+MOD r
+DELAY 500
+
+# Android system controls
+ANDROID_VOLUME_UP
+DELAY 200
+ANDROID_VOLUME_DOWN
+DELAY 200
+
+# Standard string input
+STRING Testing mixed commands
+DELAY 500
+ENTER
+
+# Android app management
+ANDROID_OPEN_APP Calculator
+DELAY 1000
+ANDROID_CLOSE_APP
+DELAY 500
+
+# Standard navigation
+UP
+DOWN
+LEFT
+RIGHT
+DELAY 500
+
+# Android system features
+ANDROID_NOTIFICATIONS
+DELAY 1000
+ANDROID_BACK
+DELAY 500
+
+# Final test
+STRING Mixed command test completed!
+ENTER
+DELAY 1000 

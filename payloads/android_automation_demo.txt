@@ -1,0 +1,57 @@
+# Android Automation Demo - Educational Purpose
+# Demonstrates legitimate Android automation capabilities
+
+ATTACKMODE HID STORAGE
+DELAY 3000
+
+# Demo: Automated app testing
+STRING Android Automation Demo
+DELAY 500
+ENTER
+DELAY 1000
+
+# Demo: System navigation
+ANDROID_HOME
+DELAY 500
+ANDROID_APP_SWITCH
+DELAY 1000
+ANDROID_BACK
+DELAY 500
+
+# Demo: Settings navigation (safe)
+ANDROID_OPEN_APP Settings
+DELAY 2000
+STRING About phone
+DELAY 500
+ENTER
+DELAY 1000
+ANDROID_BACK
+DELAY 500
+ANDROID_BACK
+DELAY 500
+
+# Demo: Media controls
+ANDROID_VOLUME_UP
+DELAY 200
+ANDROID_VOLUME_UP
+DELAY 200
+ANDROID_MUTE
+DELAY 500
+
+# Demo: Screenshot capability
+ANDROID_SCREENSHOT
+DELAY 1000
+
+# Demo: Accessibility features
+ANDROID_ACCESSIBILITY
+DELAY 1000
+ANDROID_BACK
+DELAY 500
+
+# Return to home and complete
+ANDROID_HOME
+DELAY 500
+STRING Demo completed successfully!
+DELAY 500
+ENTER
+DELAY 1000 

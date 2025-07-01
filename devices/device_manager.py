@@ -20,7 +20,8 @@ from devices.teensy_4 import Teensy4Encoder
 from devices.digispark import DigiSparkEncoder
 from devices.esp32 import ESP32Encoder
 from devices.xiao_rp2040 import XiaoRP2040Encoder
-from devices.evilcrow_cable import EvilCrowCableEncoder
+from devices.evilcrow_cable_wind import EvilCrowCableEncoder
+from devices.android import AndroidEncoder
 
 
 class DeviceManager:
@@ -89,6 +90,14 @@ class DeviceManager:
                 'difficulty': 'Advanced',
                 'price_range': '$15-30',
                 'best_for': ['Advanced security research', 'BadUSB demonstrations', 'Stealth operations']
+            },
+            'android': {
+                'name': 'Android Device',
+                'encoder_class': AndroidEncoder,
+                'description': 'Android-specific automation with mobile device capabilities',
+                'difficulty': 'Advanced',
+                'price_range': 'Varies',
+                'best_for': ['Mobile security research', 'Android automation', 'Mobile device testing']
             },
         }
     

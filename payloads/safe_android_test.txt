@@ -1,0 +1,47 @@
+# Safe Android HID Test - Educational Purpose Only
+# This payload demonstrates legitimate HID automation on Android
+
+ATTACKMODE HID STORAGE
+DELAY 3000
+
+# Test basic navigation
+ANDROID_HOME
+DELAY 1000
+
+# Test text input
+STRING Hello from EvilCrow-Cable!
+DELAY 500
+ENTER
+DELAY 1000
+
+# Test volume controls
+ANDROID_VOLUME_UP
+DELAY 200
+ANDROID_VOLUME_DOWN
+DELAY 200
+
+# Test app opening (safe apps only)
+ANDROID_OPEN_APP Calculator
+DELAY 2000
+ANDROID_BACK
+DELAY 500
+
+# Test notifications panel
+ANDROID_NOTIFICATIONS
+DELAY 1000
+ANDROID_BACK
+DELAY 500
+
+# Test quick settings
+ANDROID_QUICK_SETTINGS
+DELAY 1000
+ANDROID_BACK
+DELAY 500
+
+# Return to home
+ANDROID_HOME
+DELAY 500
+STRING Safe Android test completed!
+DELAY 500
+ENTER
+DELAY 1000 

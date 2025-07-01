@@ -18,7 +18,7 @@ from .digispark import DigiSparkEncoder
 from .teensy_4 import Teensy4Encoder
 from .raspberry_pi_pico import RaspberryPiPicoEncoder
 from .arduino_leonardo import ArduinoLeonardoEncoder
-from .evilcrow_cable import EvilCrowCableEncoder
+from .evilcrow_cable_wind import EvilCrowCableEncoder
 
 __version__ = "1.0.0"
 __author__ = "ZeroDumb"
@@ -35,5 +35,5 @@ __all__ = [
     "Teensy4Encoder",
     "RaspberryPiPicoEncoder",
     "ArduinoLeonardoEncoder",
-    "EvilCrowCableEncoder",
+    # "EvilCrowCableEncoder",
 ] 

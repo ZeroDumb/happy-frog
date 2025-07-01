@@ -95,6 +95,7 @@ Device Selection:
   - digispark: DigiSpark
   - esp32: ESP32
   - evilcrow_cable: EvilCrow-Cable (BadUSB device)
+  - android: Android Device (mobile automation)
 
 Educational Purpose:
   This tool demonstrates parsing, code generation, and CLI development concepts.
@@ -121,7 +122,7 @@ Educational Purpose:
     encode_parser.add_argument('input_file', help='Input Happy Frog Script file (.txt)')
     encode_parser.add_argument('-o', '--output', help='Output file path (default: compiled/input_name.py)')
     encode_parser.add_argument('--device', '-d', 
-                              help='Target device: xiao_rp2040, raspberry_pi_pico, arduino_leonardo, teensy_4, digispark, esp32, evilcrow_cable')
+                              help='Target device: xiao_rp2040, raspberry_pi_pico, arduino_leonardo, teensy_4, digispark, esp32, evilcrow_cable, android')
     encode_parser.add_argument('--production', '-p', action='store_true', 
                               help='Generate production-ready code (runs immediately on boot with ATTACKMODE)')
     encode_parser.add_argument('--verbose', '-v', action='store_true', help='Verbose output showing generated code preview')
